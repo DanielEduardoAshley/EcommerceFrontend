@@ -1,0 +1,50 @@
+/* Text move code */
+.live{
+    height:100px;
+    float:right;
+    overflow: hidden;
+    font:  50px/70px 'Baloo Bhaijaan', 'cursive';
+    text-align: center;
+    margin-right: 250px;
+    margin-top:200px;
+    
+  }
+  .identity{
+      height: 100px;
+      color: red;
+      /* padding-left:350px; */
+      margin-left: 15px;
+      /* margin-right: 50; */
+      float:right;
+      position :relative;
+      -webkit-animation: mymove 5s infinite; /* Safari 4.0 - 8.0 */
+      animation: mymove 5s infinite;
+    -webkit-animation-delay: 1s;
+  }
+  
+  /* Safari 4.0 - 8.0 */
+  @-webkit-keyframes mymove {
+      0%   {top: 0px;}
+      20%  {top: -100px;}
+      40%  {top: -200px}
+      60%  {top: -300px;}
+      80%  {top: -400px;}
+      100%  {top: 0px;}
+  }
+  
+  /* Standard syntax */
+  @keyframes mymove {
+      0%   {top: 0px;}
+      20%  {top: -100px;}
+      40%  {top: -200px}
+      60%  {top: -300px;}
+      80%  {top: -400px;}
+      100%  {top: 0px;}
+  }
+
+
+  .buttonlocation{
+
+    margin-left: 370px;
+    margin-top: 30px;
+  }

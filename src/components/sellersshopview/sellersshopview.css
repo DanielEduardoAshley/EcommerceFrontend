@@ -1,0 +1,39 @@
+.sellerrow{
+display: flex;
+flex-wrap: wrap;
+width:250px;
+height:300px;
+text-align: center;
+justify-content: center;
+/* margin-left: 50%; */
+
+}
+
+.sellerproduct{
+    display: flex;
+    flex-wrap: wrap;
+    width:950px;
+    height:500px;
+    margin-left : 15%;
+    margin-top: 10%;
+
+}
+
+.featuredshoprow{
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-left:16%;
+    height: 200px;
+    width: 75%;
+    margin-top: 70px;
+    margin-bottom: 200px;
+    /* background-color: blue; */
+    justify-content: space-around;
+}
+
+    .sellerdescription{
+    margin-left: 16%;
+    font-size: 20px;
+    }
