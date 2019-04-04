@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 // import firebase from '../../firebase';
 import * as firebase from 'firebase';
 import {Link, HashRouter, Router} from 'react-router-dom'
-import './profileview.css'
+import './searchview.css'
 import instance from '../../services/axios'
 import AuthContext from '../../contexts/auth'
 
 
-class ProfileView extends Component {
+class SearchView extends Component {
 
   state={
     media : [],
@@ -27,35 +27,7 @@ static contextType = AuthContext
     // ImageService.saveImage(url, date);
   }
 
-  handleFileInput = async (e) => {
-   
-
-
-    const firstFile = e.target.files[0];
-
-    const root = firebase.storage().ref()
-    const newImage = root.child(firstFile.name);
-
-    // newImage.put(firstFile)
-    //   .then((snapshot) => {
-    //     return snapshot.ref.getDownloadURL()
-    //   })
-    //   .then((url) => {
-    //     console.log(url)
-    //     this.saveImage(url);
-    //   })
-
-    try {
-      const snapshot = await newImage.put(firstFile);
-      const url = await snapshot.ref.getDownloadURL();
-      this.saveImage(url);
-    }
-    catch(err) {
-      console.log(err);
-    }
-    
-  }
-
+ 
   load=(e, user)=>{
     console.log("hello")
       this.setState({ 
@@ -67,42 +39,18 @@ static contextType = AuthContext
   }
 
   componentDidMount() {
-    this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // ..... DO YOUR LOGGED IN LOGIC
-        this.setState({  userId: user.uid }, () => {
-          this.getFirebasetoken()
-
-        })
-
-
-        instance.post(`users/${user.uid}`)
-        .then((userData)=>{
-            console.log('this is the data',userData.data.response[0])
-            this.setState({userData : userData.data.response})
-        })
-      
-      }
- })
+   
 }
 
   componentWillUnmount() {
-    this.unsubscribe();
+  }
+  
+  addToCart=()=>{
+    console.log('cart')
   }
   
   
-  
-  
-  
-  getFirebasetoken=()=>{
-    firebase.auth().currentUser.getIdToken(false)
-    .then((token)=>{
-      this.setState({
-        token : token
-      })
-      console.log(token)
-    })
-  }
+ 
 
 
   render() {
@@ -252,17 +200,10 @@ static contextType = AuthContext
       <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
         <img src="/w3images/avatar2.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
         <span className="w3-right w3-opacity">1 min</span>
-        <h4>John Doe</h4><br></br>
+        <h4>John Doe </h4><br></br>
         <hr className="w3-clear"></hr>
 
-        {/* Button to Add Media */}
-        <div className='contains'>
-        <div className="upload-btn-wrapper">
-        <button className="btn">➕</button>
-        <input type="file" name="myfile" onChange={this.handleFileInput} onClick={this.getFirebasetoken} />
-        </div><div className='label'></div><div className='minus'>➖</div>
-        </div>
-        {/* Button to Add Media */}
+       
 
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
           <div className="w3-row-padding" style={{"margin" :"0 -16px"}}>
@@ -284,11 +225,12 @@ static contextType = AuthContext
       <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
         <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
         <span className="w3-right w3-opacity">16 min</span>
-        <h4>Jane Doe</h4><br></br>
+        <h4>Jane Doe</h4><Link to='/product' className='prodview'>🔎</Link><a onClick={this.addToCart}>🛒</a><br></br>
         <hr className="w3-clear"></hr>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
+        
       </div>  
 
       {/* <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
@@ -378,4 +320,4 @@ static contextType = AuthContext
 
 }
 }
-export default ProfileView;
+export default SearchView;

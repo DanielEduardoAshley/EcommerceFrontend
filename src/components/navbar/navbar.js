@@ -3,6 +3,7 @@ import { HashRouter, Link } from 'react-router-dom';
 import './navbar.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import AuthContext from '../../contexts/auth'
+import Searchbar from '../searchbar/searchbar'
 
 class Navbar extends React.Component{
 
@@ -14,16 +15,16 @@ class Navbar extends React.Component{
   <HashRouter>
       <>
     <Link to='/howitworks' className="active">How It Works</Link>
-    <Link to='/profileview'>Profile</Link>
+    <Link to='/profileview'>My Profile</Link>
     <Link to='/products'>Search</Link>
     <Link to='/product'>Product</Link>
+    <Link to='/sellershop'>Dashboard</Link>
     <Link to='/checkout'>Checkout</Link>
-    <Link to='/sellershop'>Shop</Link>
-    <Link to='/login'>About</Link>
     <Link to='/logout'>Logout</Link>
+    <Link to='/splash'>Splash</Link>
     </>
     </HashRouter>
-    <input className='search' type="text" placeholder="Search"></input>      
+    <Searchbar />
   </div>
   </>
 
@@ -31,17 +32,17 @@ class Navbar extends React.Component{
     <HashRouter>
       <>
     <Link to='/howitworks' className="active">How It Works</Link>
-    <Link to='/profileview'>Profile</Link>
+    {/* <Link to='/profileview'>Profile</Link> */}
     <Link to='/products'>Search</Link>
     <Link to='/product'>Product</Link>
     <Link to='/checkout'>Checkout</Link>
-    <Link to='/sellershop'>Shop</Link>
-    <Link to='/'>About</Link>
     <Link to='/signin'>Login</Link>
     <Link to='/signup'>Register</Link>
+    <Link to='/splash'>Splash</Link>
+
       </>
     </HashRouter>
-      <input className='search' type="text" placeholder="Search"></input> 
+    <Searchbar />
     </div>
     </>
 

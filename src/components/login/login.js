@@ -120,7 +120,7 @@ render(){
         {
           (user) => {
             if (user) {
-              return <Redirect to='/howitworks' />
+              return <Redirect to='/profileview' />
             } else {
               return displayForm;
             }

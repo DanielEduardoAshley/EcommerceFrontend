@@ -4,13 +4,16 @@ import { Button } from 'reactstrap';
 import Productlistingscard from '../productlistingscard/productlistingscard'
 import Sidedashboard from '../sidedashboard/sidedashboard'
 
+
 class ProductListingsView extends React.Component{
 
 
     state={
-        profiles: ['Daniel','Peter', 'James','Daniel','Peter', 'James','Daniel','Peter', 'James','Daniel','Peter', 'James',]
+        profiles: ['Daniel','Peter', 'James','Daniel','Peter', 'James','Daniel','Peter', 'James','Daniel','Peter', 'James',],
+        activities: [],
 
     }
+   
 
     render(){
         return(
@@ -18,7 +21,7 @@ class ProductListingsView extends React.Component{
 <div className='toprow'>
     <div className="rowone">
   {  this.state.profiles.map((e,i)=>{
-    return    <Productlistingscard name={e}/>
+    return    <Productlistingscard key={i} name={e}  />
 
       })  
   }
