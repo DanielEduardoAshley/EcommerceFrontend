@@ -12,6 +12,8 @@ import Signin from './components/login/login'
 import Signup from './components/signup/signup'
 import Logout from './components/logout/logout'
 import Sellersshopview from './components/sellersshopview/sellersshopview'
+import SearchView from './components/searchview/searchview'
+
 import firebase from './firebase';
 import AuthContext from './contexts/auth';
 
@@ -37,16 +39,17 @@ componentWillUnmount() {
 
 
   render() {
-    const num = 0
+    const num = 1
     return (<>
 
       <AuthContext.Provider value={this.state.user}>
       <div>
-      {num === 1 ? <SplashPage/>: <Navbar/>}
+      {num === 0 ? <SplashPage/>: <Navbar/>}
 <HashRouter>
   <>
   <Switch>
   <Route path='/profileview' exact component={ ProfileView }/>
+  <Route path='/searchview' exact component={ SearchView }/>
   <Route path='/howitworks' exact component={ HowItWorksPage }/>
   <Route path='/products'  exact component={ ProductListingsView}/>
   <Route path='/product' exact component={ ProductPageView }/>
@@ -55,6 +58,8 @@ componentWillUnmount() {
   <Route path='/signup' exact component={ Signup }/>
   <Route path='/checkout' exact component={ Checkout }/>
   <Route path='/sellershop' exact component={ Sellersshopview }/>
+  <Route path='/splash' exact component={ SplashPage }/>
+
   </Switch>
 
        {/* <ProfileView/> */}

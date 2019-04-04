@@ -1,0 +1,48 @@
+.searchbars{
+    width: 300px;
+    margin-top: 50;
+    margin-left: 140px;
+    /* height:30px; */
+    background-color: white;
+    border-radius: 30px 30px 30px 30px;
+    border: none;
+    color: black;
+    text-indent: 15px;
+    background-image: url('https://img.icons8.com/material/24/000000/search.png');
+    background-repeat: no-repeat;
+    background-position: 250px;
+
+}
+
+.searchrow{
+margin-top:15px;
+width:300;
+}
+
+/* .searchbar:active{
+   border: 1px solid blue;
+   color: blue;
+   border-radius: 30px 30px 30px 30px;
+
+} */
+
+.searchcontainer{
+  display:flex; 
+  width: 50px;
+  height:40px;
+  margin-left: 75px;
+}
+/* .searchbar{
+    height: 43px;
+    margin-top:14px;
+
+    
+} */
+
+.searchicon{
+  margin-top: 4px;
+  width: 20px;
+  /* margin-right: 20px; */
+  height: 50px;
+
+}
