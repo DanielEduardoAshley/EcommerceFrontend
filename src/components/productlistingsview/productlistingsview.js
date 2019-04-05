@@ -23,8 +23,8 @@ class ProductListingsView extends React.Component{
         <>
 <div className='toprow'>
     <div className="rowone">
-  {  this.state.profiles.map((e,i)=>{
-    return    <Productlistingscard key={i} name={e}  />
+  {  this.props.searchresults.map((e,i)=>{
+    return    <Productlistingscard key={i} name={e.name}  />
 
       })  
   }
