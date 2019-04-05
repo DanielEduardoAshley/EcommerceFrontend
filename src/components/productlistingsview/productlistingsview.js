@@ -11,11 +11,14 @@ class ProductListingsView extends React.Component{
     state={
         profiles: ['Daniel','Peter', 'James','Daniel','Peter', 'James','Daniel','Peter', 'James','Daniel','Peter', 'James',],
         activities: [],
+        product:[],
+        searchby: '',
 
     }
    
 
     render(){
+        console.log(this.props)
         return(
         <>
 <div className='toprow'>

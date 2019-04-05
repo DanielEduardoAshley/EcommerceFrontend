@@ -4,7 +4,10 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import './searchbar.css'
-
+import instance from '../../services/axios'
+import ProductlistingsView from '../productlistingsview/productlistingsview'
+import { HashRouter, Redirect, Link } from 'react-router-dom'
+import {withRouter} from 'react-router'
 const options = [
   'Search By',
   'Profile',
@@ -18,24 +21,75 @@ const ITEM_HEIGHT = 48;
 class Searchbar extends React.Component {
   state = {
     anchorEl: null,
+    searchby: '',
+    profiles: [],
+    product:[],
+    activity:[],
+    query: '',
+
   };
+
+searchby =()=>{
+   const {searchby} =  this.state 
+   console.log('query',this.state.query)
+   if(this.state.query !== ''){
+   this.props.history.push(`search/${this.state.query}`)
+   }
+   console.log('helloworld')
+   if(searchby === 'Profile'){
+        instance.get(`users/searchuser/${this.state.query}`)
+            .then(response=>{
+                    this.setState({profiles: response.data.response})
+                    console.log(response)
+    })
+    }
+    else if(searchby === 'Product' || searchby === 'Activity'){
+        const type = searchby.toLowerCase()
+        instance.get(`product/searchproducts/${type}/query/${this.state.query}`)
+            .then(response=>{
+                    this.setState(
+                        {[ type ] : response.data.response,
+                          clicked : true
+                    })
+                })
+            .then(()=>console.log(this.state)
+                 )
+    }
+   console.log('theseprops',this.props)
+   
+};
+
+  handleChange=(e)=>{
+      this.setState({ query: e.target.value })
+    
+
+  }
 
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
+    console.log(event.currentTarget)
   };
 
-  handleClose = () => {
-    this.setState({ anchorEl: null });
+  handleClose = (e, option) => {
+    this.setState({ 
+        anchorEl: null,
+        searchby : option,
+     });
+    console.log('hey', option)
   };
 
   render() {
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
+    let list = this.props.history.location.pathname.split('/')
+    console.log(list[1])
 
     return (<>
     <div className='searchcontainer'>
         <div className='searchrow'>
-            <input className='searchbars' type="text" placeholder="Search"></input>      
+            <input className='searchbars' type="text" placeholder="Search" name='' onChange={e=>this.handleChange(e)} ></input>  
+         <div className='icon'><img src="https://img.icons8.com/material/24/000000/search.png" alt="Search" onClick={this.searchby}></img></div>
+    
         </div>
         <div className='searchicon'>
             <div >
@@ -60,17 +114,24 @@ class Searchbar extends React.Component {
           }}
         >
           {options.map(option => (
-            <MenuItem key={option} selected={option === 'Pyxis'} onClick={this.handleClose}>
+            <MenuItem key={option} selected={option === 'Pyxis'} onClick={e=>this.handleClose(e, option)}>
               {option}
             </MenuItem>
           ))}
         </Menu>
       </div>
     </div>
+ 
 </div>
+
+{
+    list[1]=== 'search'?
+<ProductlistingsView searchresults={this.state.profiles}/> : null
+
+}
     </>)
-    
+
   }
 }
 
-export default Searchbar;
+export default withRouter(Searchbar);

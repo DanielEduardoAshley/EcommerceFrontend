@@ -1,48 +1,95 @@
-.searchbars{
+ .searchbars{
     width: 300px;
-    margin-top: 50;
-    margin-left: 140px;
-    /* height:30px; */
     background-color: white;
     border-radius: 30px 30px 30px 30px;
     border: none;
     color: black;
     text-indent: 15px;
-    background-image: url('https://img.icons8.com/material/24/000000/search.png');
+    /* background-image: url('https://img.icons8.com/material/24/000000/search.png'); */
     background-repeat: no-repeat;
     background-position: 250px;
 
 }
-
-.searchrow{
-margin-top:15px;
-width:300;
+.icon{
+    position: relative;
+    left:270px;
+    top:-25px;
+    cursor: pointer;
+    
 }
 
-/* .searchbar:active{
-   border: 1px solid blue;
-   color: blue;
-   border-radius: 30px 30px 30px 30px;
+ .searchrow{
+margin-top:15px;
+width:300;
+margin-left:200px;
+margin-bottom: 200px;
+}
 
-} */
 
-.searchcontainer{
+
+ .searchcontainer{
+  position: relative;
   display:flex; 
   width: 50px;
   height:40px;
-  margin-left: 75px;
+  margin-left: 600px;
+  top: -60px;
+  /* margin-bottom: 100px; */
 }
-/* .searchbar{
-    height: 43px;
-    margin-top:14px;
 
-    
-} */
 
 .searchicon{
   margin-top: 4px;
   width: 20px;
-  /* margin-right: 20px; */
   height: 50px;
 
 }
+
+.toprow{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-left:10%
+    
+    }
+    
+    .rowone{
+    width: calc(5*8.333%);
+    display: inline-block;
+    flex-wrap: wrap;
+    height: 5000px;
+    position: absolute;
+    margin-left: 10%;
+    margin-top:7%;
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 8%;
+    }
+    
+    .rowtwo{
+    width: calc(2*8.333%);
+    display: inline-block;
+    flex-wrap: wrap;
+    height: 488px;
+    margin-top:7%;
+    margin-left:52%; 
+    position: fixed; 
+    }  
+
+    
+    .img{
+        width: 100px;
+        height:100px;
+        /* margin-left: 50px; */
+        /* text-align: center; */
+    }
+    
+    .image{
+        width: 100%;
+        height: 514px;
+    
+    
+    }
+    .avatar{
+      transform: rotate(90deg)
+    }
