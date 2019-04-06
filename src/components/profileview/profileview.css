@@ -36,6 +36,7 @@
 
   .editText{
     margin-left: 670px;
+    cursor: pointer;
   }
 
   .actName{

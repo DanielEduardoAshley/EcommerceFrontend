@@ -156,7 +156,21 @@ handlechange=(e, i, name)=>{
    console.log(activity, e)
 }
 
-
+createProduct=(e, i, type)=>{
+  const { description, duration, location, name, price, image } = this.state.activity[i]
+  const seller_id = this.state.userData[0].id
+  const img ={}
+  image.forEach(element => {
+     img[element] = element
+     return img
+  });
+  const images = JSON.stringify(img)
+  console.log('json', images)
+  instance.post('product', {seller_id,description, duration,location, type, name, price, images })
+  .then(()=>{
+    console.log('success')
+  })
+}
   render() {
     console.log(this.state.activity[0])
     const story = 'story'
@@ -199,7 +213,7 @@ handlechange=(e, i, name)=>{
 </div> */}
 
 {/* <!-- Page Container --> */}
-<div className="w3-container w3-content" style={{"maxWidth" : "1400px" ,  "marginTop" :" 80px"}}>    
+<div className="w3-container w3-content" style={{"maxWidth" : "1400px" ,  "marginTop" :" 20px"}}>    
   {/* <!-- The Grid --> */}
   <div className="w3-row">
     {/* <!-- Left Column --> */}
@@ -355,7 +369,7 @@ handlechange=(e, i, name)=>{
         </div><div className='label'></div><div className='minus'>➖</div>
         </div>
         {/* Button to Add Media */}
-        <a className='editText'>🖊️</a>
+        <a className='editText' onClick={e=>this.createProduct(e, i, 'activity')}>🖊️</a>
         <div>Price:$<input placeholder='10000' value={price} onChange={e=>this.handlechange(e,i,'price')}></input></div><br></br>
         <div>Location:<input placeholder='Anywhere'contentEditable='true' value={location} onChange={e=>this.handlechange(e, i, 'location')}></input></div><br></br>
        <div>Duration:<input placeholder='1day' contentEditable='true'  value={duration} onChange={e=>this.handlechange(e, i, 'duration')}></input></div>
