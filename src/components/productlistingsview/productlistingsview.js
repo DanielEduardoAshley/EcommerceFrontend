@@ -16,7 +16,9 @@ class ProductListingsView extends React.Component{
 
     }
    
-
+goto=(e)=>{
+    this.props.history.push(`/product/${e.name}`)
+}
     render(){
         const searchby =(this.props.searchresults.searchby || '').toLowerCase()
         const productresults = this.props.searchresults[searchby]
@@ -28,8 +30,8 @@ class ProductListingsView extends React.Component{
     
 <div className='toprow'>
     <div className="rowone">
-  {  productresults.map((e,i)=>{
-    return    <Productlistingscard key={i} name={e.name}  />
+  {  productresults.map((ee,i)=>{
+    return    <Productlistingscard key={i} name={ee.name} onClick={()=>this.goto(ee)} />
 
       })  
   }
