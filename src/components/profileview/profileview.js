@@ -10,26 +10,47 @@ import AuthContext from '../../contexts/auth'
 class ProfileView extends Component {
 
   state={
-    media : [],
+    storymedia : [],
     user : null,
     token : null,
     userId : null,
     userData: [],
+    activity:[],
+    product:[],
   }
 
 static contextType = AuthContext
 
-  saveImage = (url) => {
+  saveImage = (url, type, i=null) => {
     const date = Date();
+    if(type === 'story'){
     this.setState({
-      media : (this.state.media || []).concat(url)
+      storymedia : (this.state.storymedia || []).concat(url)
     })
+  }
+  else if(type === 'activity'){
+    const {activity} = this.state
+       const images =  (activity[i].image || []).concat(url)
+       activity[i].image = images
+
+    this.setState({
+      activity : activity ,
+    })
+
+  }else{
+    const {product} = this.state
+       const images =  (product[i].image || []).concat(url)
+       product[i].image = images
+    this.setState({
+      product : product,
+    })
+
+  }
     // ImageService.saveImage(url, date);
   }
 
-  handleFileInput = async (e) => {
+  handleFileInput = async (e,type, i) => {
    
-
 
     const firstFile = e.target.files[0];
 
@@ -48,7 +69,7 @@ static contextType = AuthContext
     try {
       const snapshot = await newImage.put(firstFile);
       const url = await snapshot.ref.getDownloadURL();
-      this.saveImage(url);
+      this.saveImage(url,type, i);
     }
     catch(err) {
       console.log(err);
@@ -104,8 +125,28 @@ static contextType = AuthContext
     })
   }
 
+  activity=()=>{
+     const obj = {}
+     obj.image = []
+     this.setState({
+       activity : (this.state.activity || []).concat(obj)
+     })
+  }
+
+  product=()=>{
+    const obj = {}
+    obj.image = []
+     this.setState({
+       product : (this.state.product || []).concat(obj)
+     })
+  }
+
 
   render() {
+    console.log(this.state.activity)
+    const story = 'story'
+    const product = 'product'
+    const activity = 'activity'
     return (<>
 
  
@@ -250,16 +291,16 @@ static contextType = AuthContext
       </div>
       
       <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
-        <img src="/w3images/avatar2.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
+        {/* <img src="/w3images/avatar2.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">1 min</span>
-        <h4>John Doe</h4><br></br>
+        <h4>Create Your Story</h4><button onClick={this.activity}>⛸️ Add An Activity</button><button onClick={this.product}>🎁Add An Product</button> 
         <hr className="w3-clear"></hr>
 
         {/* Button to Add Media */}
         <div className='contains'>
         <div className="upload-btn-wrapper">
         <button className="btn">➕</button>
-        <input type="file" name="myfile" onChange={this.handleFileInput} onClick={this.getFirebasetoken} />
+        <input type="file" name="myfile" onChange={e=>this.handleFileInput(e,story)} onClick={this.getFirebasetoken} />
         </div><div className='label'></div><div className='minus'>➖</div>
         </div>
         {/* Button to Add Media */}
@@ -267,7 +308,7 @@ static contextType = AuthContext
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
           <div className="w3-row-padding" style={{"margin" :"0 -16px"}}>
             <div className="w3-half">
-            {this.state.media.map((e,i)=>{
+            {this.state.storymedia.map((e,i)=>{
              return <img src={e} style={{"width" :"100%"}} alt="Northern Lights" className="w3-margin-bottom" key={i}></img>
             
             })
@@ -281,15 +322,68 @@ static contextType = AuthContext
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
       </div>
       
-      <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
-        <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
+
+      {this.state.activity.map((e,i)=>{
+        return <div className="w3-container w3-card w3-white w3-round w3-margin" key={i}><br></br>
+        {/* <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">16 min</span>
-        <h4>Jane Doe</h4><br></br>
+        <h4>Create An Activity</h4><br></br><button>➖ Delete Activity</button><button>Edit Activity</button><button>Publish Activity</button> 
         <hr className="w3-clear"></hr>
+        {/* Button to Add Media */}
+        <div className='contains'>
+        <div className="upload-btn-wrapper">
+        <button className="btn">➕</button>
+        <input type="file" name="myfile" onChange={e=>this.handleFileInput(e,activity, i)} onClick={this.getFirebasetoken} />
+        </div><div className='label'></div><div className='minus'>➖</div>
+        </div>
+        {/* Button to Add Media */}
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        {(e.image || []).map((e,i)=>{ 
+            return   <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+            
+            
+             })
+        }
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
-      </div>  
+      </div> 
+
+      })}
+
+      {/* {     this.state.activitymedia[0].map((e,i)=>{
+             return <img src={e} style={{"width" :"100%"}} alt="Northern Lights" className="w3-margin-bottom" key={i}></img>
+            
+            })
+            } */}
+
+      {this.state.product.map((e,i)=>{
+        return <div className="w3-container w3-card w3-white w3-round w3-margin" key={i}><br></br>
+        {/* <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
+        <span className="w3-right w3-opacity">16 min</span>
+        <h4>Create A Product</h4><br></br><button>➖ Delete Product</button><button>Edit Product</button><button>Publish Product</button> 
+        <hr className="w3-clear"></hr>
+        {/* Button to Add Media */}
+        <div className='contains'>
+        <div className="upload-btn-wrapper">
+        <button className="btn">➕</button>
+        <input type="file" name="myfile" onChange={e=>this.handleFileInput(e,product, i)} onClick={this.getFirebasetoken} />
+        </div><div className='label'></div><div className='minus'>➖</div>
+        </div>
+        {/* Button to Add Media */}
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        {
+          (e.image || []).map((e,i)=>{ 
+          return   <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+  
+  
+          })
+        }
+        <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
+        <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
+      </div> 
+
+      })}
+       
 
       {/* <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
         <img src="/w3images/avatar6.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
