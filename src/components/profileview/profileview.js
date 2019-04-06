@@ -94,18 +94,35 @@ class ProfileView extends Component {
         // ..... DO YOUR LOGGED IN LOGIC
         this.setState({  userId: user.uid }, () => {
           this.getFirebasetoken()
-
         })
-
 
         instance.post(`users/${user.uid}`)
         .then((userData)=>{
             console.log('this is the data',userData.data.response[0])
             this.setState({userData : userData.data.response})
         })
-      
+        .then(()=>{
+          console.log('hhhey')
+          return instance.get('product/1/products')
+        })
+        .then((response)=>{
+          console.log(response)
+          const data = response.data.response
+          data.forEach(ele=>{
+              if(ele.type === 'activity'){
+                this.setState({activity : (this.state.activity || []).concat(ele) })
+              }
+              else if(ele.type === 'product'){
+                this.setState({product : (this.state.product || []).concat(ele) })
+
+              }
+
+          })
+          this.setState({ product : (this.state.product || []).concat(response.data.response)})
+        })
       }
  })
+
 }
 
   componentWillUnmount() {
@@ -159,12 +176,15 @@ handlechange=(e, i, name)=>{
 createProduct=(e, i, type)=>{
   const { description, duration, location, name, price, image } = this.state.activity[i]
   const seller_id = this.state.userData[0].id
-  const img ={}
-  image.forEach(element => {
-     img[element] = element
-     return img
-  });
-  const images = JSON.stringify(img)
+  // const img ={}
+  // img.images = []
+  // image.forEach((element) => {
+  //    img[i] = element
+  //    return img
+  // });
+  const images = JSON.stringify(image)
+  
+  // images.concat(imaged)
   console.log('json', images)
   instance.post('product', {seller_id,description, duration,location, type, name, price, images })
   .then(()=>{
@@ -172,6 +192,7 @@ createProduct=(e, i, type)=>{
   })
 }
   render() {
+    console.log('This is your state',this.state)
     console.log(this.state.activity[0])
     const story = 'story'
     const placeholder = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
@@ -356,6 +377,7 @@ createProduct=(e, i, type)=>{
       
 
       {this.state.activity.map((e,i)=>{
+        console.log('iam', e.image)
         return <div className="w3-container w3-card w3-white w3-round w3-margin" key={i}><br></br>
         {/* <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">16 min</span>
@@ -370,15 +392,21 @@ createProduct=(e, i, type)=>{
         </div>
         {/* Button to Add Media */}
         <a className='editText' onClick={e=>this.createProduct(e, i, 'activity')}>🖊️</a>
-        <div>Price:$<input placeholder='10000' value={price} onChange={e=>this.handlechange(e,i,'price')}></input></div><br></br>
-        <div>Location:<input placeholder='Anywhere'contentEditable='true' value={location} onChange={e=>this.handlechange(e, i, 'location')}></input></div><br></br>
-       <div>Duration:<input placeholder='1day' contentEditable='true'  value={duration} onChange={e=>this.handlechange(e, i, 'duration')}></input></div>
+        <div>Price:$<input placeholder='10000' value={e.price} onChange={e=>this.handlechange(e,i,'price')}></input></div><br></br>
+        <div>Location:<input placeholder='Anywhere'contentEditable='true' value={e.location} onChange={e=>this.handlechange(e, i, 'location')}></input></div><br></br>
+       <div>Duration:<input placeholder='1day' contentEditable='true'  value={e.duration} onChange={e=>this.handlechange(e, i, 'duration')}></input></div>
         <ContentEditable disabled={false} html={this.state.activity[i].description}  onChange={e=>this.handlechange(e, i, 'description')}/>
-        {(e.image || []).map((e,i)=>{ 
-            return   <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+        {
+          (e.image || []).map((e,i)=>{ 
+             return  <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
             
             
              })
+        }
+        {
+           (e.images || []).map((e,i)=>{ 
+            return  <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+        })
         }
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
