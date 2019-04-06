@@ -18,12 +18,17 @@ class ProductListingsView extends React.Component{
    
 
     render(){
-        console.log(this.props)
+        const searchby =(this.props.searchresults.searchby || '').toLowerCase()
+        const productresults = this.props.searchresults[searchby]
+        console.log('searchby', searchby)
+        console.log('k',this.props.searchresults[searchby])
+        if(searchby === 'activity'){
         return(
         <>
+    
 <div className='toprow'>
     <div className="rowone">
-  {  this.props.searchresults.map((e,i)=>{
+  {  productresults.map((e,i)=>{
     return    <Productlistingscard key={i} name={e.name}  />
 
       })  
@@ -35,7 +40,49 @@ class ProductListingsView extends React.Component{
     </div>
 </div>
         </>
-        )
+        )}
+        else if(searchby === 'product'){
+            return(
+                <>
+            
+        <div className='toprow'>
+            <div className="rowone">
+          {  productresults.map((e,i)=>{
+            return    <Productlistingscard key={i} name={e.name}  />
+        
+              })  
+          }
+            </div>
+            <div className="rowtwo">
+            <Sidedashboard/>
+            
+            </div>
+        </div>
+                </>
+                )
+        }
+        else {
+            return(
+                <>
+            
+        <div className='toprow'>
+            <div className="rowone">
+          {  this.props.searchresults.profile.map((e,i)=>{
+            return    <Productlistingscard key={i} name={e.name}  />
+        
+              })  
+          }
+            </div>
+            <div className="rowtwo">
+            <Sidedashboard/>
+            
+            </div>
+        </div>
+                </>
+                )
+
+        }
+        
     }
         
 }

@@ -22,7 +22,7 @@ class Searchbar extends React.Component {
   state = {
     anchorEl: null,
     searchby: '',
-    profiles: [],
+    profile: [],
     product:[],
     activity:[],
     query: '',
@@ -36,14 +36,14 @@ searchby =()=>{
    this.props.history.push(`search/${this.state.query}`)
    }
    console.log('helloworld')
-   if(searchby === 'Profile'){
-        instance.get(`users/searchuser/${this.state.query}`)
-            .then(response=>{
-                    this.setState({profiles: response.data.response})
-                    console.log(response)
-    })
-    }
-    else if(searchby === 'Product' || searchby === 'Activity'){
+//    if(searchby === 'Profile'){
+//         instance.get(`users/searchuser/${this.state.query}`)
+//             .then(response=>{
+//                     this.setState({profile: response.data.response})
+//                     console.log(response)
+//     })
+//     }
+     if(searchby === 'Product' || searchby === 'Activity'){
         const type = searchby.toLowerCase()
         instance.get(`product/searchproducts/${type}/query/${this.state.query}`)
             .then(response=>{
@@ -54,6 +54,16 @@ searchby =()=>{
                 })
             .then(()=>console.log(this.state)
                  )
+    }else{
+        instance.get(`users/searchuser/${this.state.query}`)
+            .then(response=>{
+                    this.setState({
+                        profile: response.data.response,
+                        searchby : 'Profile'
+                    
+                    })
+                    console.log(response)
+    })
     }
    console.log('theseprops',this.props)
    
@@ -125,8 +135,8 @@ searchby =()=>{
 </div>
 
 {
-    list[1]=== 'search'?
-<ProductlistingsView searchresults={this.state.profiles}/> : null
+    list[1]=== 'search' ?
+<ProductlistingsView searchresults={this.state}/> : null
 
 }
     </>)

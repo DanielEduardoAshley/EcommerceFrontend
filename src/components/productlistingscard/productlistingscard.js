@@ -10,7 +10,6 @@ class Productlistingscard extends React.Component{
   
 
 render(){
-  console.log('heyprops',this.props)
     return(
             <>
            <HashRouter>
