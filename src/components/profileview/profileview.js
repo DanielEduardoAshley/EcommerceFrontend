@@ -7,6 +7,8 @@ import {Link, HashRouter, Router} from 'react-router-dom'
 import './profileview.css'
 import instance from '../../services/axios'
 import AuthContext from '../../contexts/auth'
+import cartStorage from '../../services/cart';
+
 
 
 class ProfileView extends Component {
@@ -91,12 +93,13 @@ class ProfileView extends Component {
 
         instance.post(`users/${user.uid}`)
         .then((userData)=>{
-            console.log('this is the data',userData.data.response[0])
+            console.log('this is the data',userData.data.response)
             this.setState({userData : userData.data.response})
+            return userData
         })
-        .then(()=>{
+        .then((response)=>{
           console.log('hhhey')
-          return instance.get('product/1/products')
+          return instance.get(`product/${response.data.response[0].id}/products`)
         })
         .then((response)=>{
           console.log(response)
@@ -157,9 +160,9 @@ class ProfileView extends Component {
      })
   }
 
-handlechange=(e, i, name)=>{
+handlechange=(e, i, type)=>{
   const { activity } = this.state
-  activity[i][name] = e.target.value;
+  activity[i][type] = e.target.value;
   this.setState({
   activity : activity,
   })
@@ -167,7 +170,7 @@ handlechange=(e, i, name)=>{
 }
 
 createProduct=(e, i, type)=>{
-  const { description, duration, location, name, price, image } = this.state.activity[i]
+  const { description, duration, location, name, price, image } = this.state[type][i]
   const seller_id = this.state.userData[0].id
   
   const images = JSON.stringify(image)
@@ -186,8 +189,23 @@ createProduct=(e, i, type)=>{
   })
 }
 
+update=(e,i,type)=>{
+const { description, duration, location, name, price, image } = this.state[type][i]
+console.log("update")
+console.log(this.state[type][i])
+const images = JSON.stringify(image)
+const prodid = this.state[type][i].id
+instance.put(`product/${prodid}`, { description, duration,location, type, name, price, images })
+.then(()=>{
+  console.log('success')
+})
+
+}
+
+
 
 delete=(e, i, type)=>{
+
   console.log('remaining',  )
 const prodid = this.state[type][i].id
 console.log('id', prodid)
@@ -374,7 +392,7 @@ instance.delete(`product/${prodid}`)
         return <div className="w3-container w3-card w3-white w3-round w3-margin" key={i}><br></br>
         {/* <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">16 min</span>
-        <ContentEditable className='actName' html={this.state.activity[i].name} onChange={e=>this.handlechange(e,i, 'name')}  /><br></br><button onClick={e=>this.delete(e,i, 'activity')}>➖ Delete Activity</button><button>Edit Activity</button><button >Publish Activity</button> 
+        <ContentEditable className='actName' html={this.state.activity[i].name} onChange={e=>this.handlechange(e,i, 'name')}  /><br></br><button onClick={e=>this.delete(e,i, 'activity')}>➖ Delete Activity</button><button onClick={e=>this.update(e,i, 'activity')}>Edit Activity</button><button >Publish Activity</button> 
         <hr className="w3-clear"></hr>
         {/* Button to Add Media */}
         <div className='contains'>

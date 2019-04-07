@@ -22,6 +22,8 @@ class Navbar extends React.Component{
     <Link to='/checkout'>Checkout</Link>
     <Link to='/logout'>Logout</Link>
     <Link to='/splash'>Splash</Link>
+    <Link to='/cart'>🛒</Link>
+
     </>
     </HashRouter>
     {/* <Searchbar /> */}
@@ -39,6 +41,7 @@ class Navbar extends React.Component{
     <Link to='/signin'>Login</Link>
     <Link to='/signup'>Register</Link>
     <Link to='/splash'>Splash</Link>
+    <Link to='/cart'>🛒</Link>
 
       </>
     </HashRouter>

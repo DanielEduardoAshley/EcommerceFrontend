@@ -14,6 +14,8 @@ import Logout from './components/logout/logout'
 import Sellersshopview from './components/sellersshopview/sellersshopview'
 import SearchView from './components/searchview/searchview'
 import Searchbar from './components/searchbar/searchbar'
+import Cart from './components/cart/cart'
+
 
 
 import firebase from './firebase';
@@ -68,6 +70,8 @@ componentWillUnmount() {
   <Route path='/checkout' exact component={ Checkout }/>
   <Route path='/sellershop' exact component={ Sellersshopview }/>
   <Route path='/splash' exact component={ SplashPage }/>
+  <Route path='/cart' exact component={ Cart }/>
+
   </Switch>
 
   </>
