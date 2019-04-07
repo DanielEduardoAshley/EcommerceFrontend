@@ -187,22 +187,31 @@ createProduct=(e, i, type)=>{
 }
 
 
-delete=(e, i, name)=>{
+delete=(e, i, type)=>{
   console.log('remaining',  )
-const prodid = this.state[name][i].id
+const prodid = this.state[type][i].id
 console.log('id', prodid)
-// const newState = ((this.state[name]).slice(0,i)).concat((this.state[name]).slice(i+1 ))
-// console.log('newState',newState)
+const newState = this.state[type]
+
 instance.delete(`product/${prodid}`)
   .then(()=>{
     console.log('success')
-    // this.setState({
-    //   [this.state[name]] : [newState],
-    // })
+    if(type === 'activity'){
+    this.setState({
+      activity : (newState.slice(0,i)).concat(newState.slice(i+1 )),
+    })
+  }
+  else if(type === 'product'){
+    this.setState({
+      product : (newState.slice(0,i)).concat(newState.slice(i+1 )),
+    })
+
+  }
   })
   .then(()=>{
-    console.log(this.state[name])
+    console.log(this.state)
   })
+  
 }
 
   render() {
