@@ -19,6 +19,7 @@ class ProfileView extends Component {
     userData: [],
     activity:[],
     product:[],
+    created: 0,
     
    
   }
@@ -58,15 +59,7 @@ class ProfileView extends Component {
     const root = firebase.storage().ref()
     const newImage = root.child(firstFile.name);
 
-    // newImage.put(firstFile)
-    //   .then((snapshot) => {
-    //     return snapshot.ref.getDownloadURL()
-    //   })
-    //   .then((url) => {
-    //     console.log(url)
-    //     this.saveImage(url);
-    //   })
-
+   
     try {
       const snapshot = await newImage.put(firstFile);
       const url = await snapshot.ref.getDownloadURL();
@@ -176,21 +169,42 @@ handlechange=(e, i, name)=>{
 createProduct=(e, i, type)=>{
   const { description, duration, location, name, price, image } = this.state.activity[i]
   const seller_id = this.state.userData[0].id
-  // const img ={}
-  // img.images = []
-  // image.forEach((element) => {
-  //    img[i] = element
-  //    return img
-  // });
+  
   const images = JSON.stringify(image)
   
-  // images.concat(imaged)
   console.log('json', images)
   instance.post('product', {seller_id,description, duration,location, type, name, price, images })
-  .then(()=>{
-    console.log('success')
+  .then((response)=>{
+    console.log('success', this.state[type])
+    const types = this.state[type]
+    types[i].id = response.data.response.id
+    this.setState({
+       [this.state.type] : types
+    },()=>{
+      console.log(this.state[type])
+    })
   })
 }
+
+
+delete=(e, i, name)=>{
+  console.log('remaining',  )
+const prodid = this.state[name][i].id
+console.log('id', prodid)
+// const newState = ((this.state[name]).slice(0,i)).concat((this.state[name]).slice(i+1 ))
+// console.log('newState',newState)
+instance.delete(`product/${prodid}`)
+  .then(()=>{
+    console.log('success')
+    // this.setState({
+    //   [this.state[name]] : [newState],
+    // })
+  })
+  .then(()=>{
+    console.log(this.state[name])
+  })
+}
+
   render() {
     console.log('This is your state',this.state)
     console.log(this.state.activity[0])
@@ -201,37 +215,7 @@ createProduct=(e, i, type)=>{
     const { description, duration, price, location, name } = this.state.activity
     return (<>
 
- 
 
-{/* <!-- Navbar --> */}
-{/* <div className="">
- <div className="">
-  <a className="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onClick={this.myFunction}><i className="fa fa-bars"></i></a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i className="fa fa-home w3-margin-right"></i>Logo</a>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="News"><i className="fa fa-globe"></i></a>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Account Settings"><i className="fa fa-user"></i></a>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Messages"><i className="fa fa-envelope"></i></a>
-  <div className="w3-dropdown-hover w3-hide-small">
-    <button className="w3-button w3-padding-large" title="Notifications"><i className="fa fa-bell"></i><span className="w3-badge w3-right w3-small w3-green">3</span></button>     
-    <div className="w3-dropdown-content w3-card-4 w3-bar-block" style={{"width" : "300px"}}>
-      <a href="#" className="w3-bar-item w3-button">One new friend request</a>
-      <a href="#" className="w3-bar-item w3-button">John Doe posted on your wall</a>
-      <a href="#" className="w3-bar-item w3-button">Jane likes your post</a>
-    </div>
-  </div>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="My Account">
-    <img src={require("./dan.jpg")}  className="w3-circle" style={{"height" : "23px" , "width" : "23px", "transform" : "rotate(90deg)"}} alt="Avatar"></img>
-  </a>
- </div>
-</div> */}
-
-{/* <!-- Navbar on small screens --> */}
-{/* <div id="navDemo" className="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium w3-large">
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">Link 1</a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">Link 2</a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">Link 3</a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">My Profile</a>
-</div> */}
 
 {/* <!-- Page Container --> */}
 <div className="w3-container w3-content" style={{"maxWidth" : "1400px" ,  "marginTop" :" 20px"}}>    
@@ -345,7 +329,7 @@ createProduct=(e, i, type)=>{
       <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
         {/* <img src="/w3images/avatar2.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">1 min</span>
-        <h4 suppressContentEditableWarning={true} contentEditable='true'name='name' value={name}>Create Your Story</h4><button onClick={this.activity}>⛸️ Add An Activity</button><button onClick={this.product}>🎁Add An Product</button> 
+        <h4 suppressContentEditableWarning={true} contentEditable='true'name='name' value={name}>Create Your Story</h4><button onClick={this.activity}>⛸️ Add An Activity</button><button onClick={this.product}>🎁Add A Product</button> 
         <hr className="w3-clear"></hr>
 
         {/* Button to Add Media */}
@@ -381,7 +365,7 @@ createProduct=(e, i, type)=>{
         return <div className="w3-container w3-card w3-white w3-round w3-margin" key={i}><br></br>
         {/* <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">16 min</span>
-        <ContentEditable className='actName' html={this.state.activity[i].name} onChange={e=>this.handlechange(e,i, 'name')}  /><br></br><button>➖ Delete Activity</button><button>Edit Activity</button><button >Publish Activity</button> 
+        <ContentEditable className='actName' html={this.state.activity[i].name} onChange={e=>this.handlechange(e,i, 'name')}  /><br></br><button onClick={e=>this.delete(e,i, 'activity')}>➖ Delete Activity</button><button>Edit Activity</button><button >Publish Activity</button> 
         <hr className="w3-clear"></hr>
         {/* Button to Add Media */}
         <div className='contains'>
@@ -452,19 +436,6 @@ createProduct=(e, i, type)=>{
       })}
        
 
-      {/* <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
-        <img src="/w3images/avatar6.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
-        <span className="w3-right w3-opacity">32 min</span>
-        <h4>Angie Jane</h4><br></br>
-        <hr className="w3-clear"></hr>
-        <p>Have you seen this?</p>
-        <img src="/w3images/nature.jpg" style={{"width":"100%"}} className="w3-margin-bottom"></img>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-        <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
-        <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
-      </div>  */}
-
-      
       
     {/* <!-- End Middle Column --> */}
     </div>
