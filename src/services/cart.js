@@ -6,22 +6,24 @@ class Storage{
  
  updateStorage=(product)=>{
    if(!localStorage){
-    const array = []
-    localStorage.setItem('cart', JSON.stringify(array))
+        const array = []
+        localStorage.setItem('cart', JSON.stringify(array))
    }
-    const locArr=[]
-    const gotLocal = localStorage.getItem('cart')
-    console.log('loc', gotLocal)
-    const parsedLocal= JSON.parse(gotLocal)
-    console.log('hhh',typeof parsedLocal)
-    for(let i=0; i< product.length; i++){
+   const locArr=[]
+   const gotLocal = localStorage.getItem('cart')
+   const parsedLocal= JSON.parse(gotLocal)
+   for(let i=0; i< product.length; i++){
         locArr.push(product[i])
-
-    }
-    const updLoc = parsedLocal.concat(locArr)
-    console.log(locArr)
-    localStorage.setItem('cart', JSON.stringify(updLoc))
+    } 
+   const updLoc = parsedLocal.concat(locArr)
+   localStorage.setItem('cart', JSON.stringify(updLoc))
  }
+
+getLocalStorage=()=>{
+     localStorage.getItem('cart')
+     const stored = JSON.parse(localStorage.getItem('cart'))
+     return stored
+}
 
  createGuestId=()=>{
    const guest_id = uuidv1()
