@@ -15,9 +15,10 @@ class SearchView extends Component {
     token : null,
     userId : null,
     userData: [],
+    activity:[],
+    product: [],
   }
 
-static contextType = AuthContext
 
   saveImage = (url) => {
     const date = Date();
@@ -39,7 +40,41 @@ static contextType = AuthContext
   }
 
   componentDidMount() {
-   
+    const id = this.props.history.location.pathname.split('/')
+    // console.log(id[id.length-1])
+    const userid = id[id.length-1]
+    instance.get(`users/${userid}/user`)
+    .then((response)=>{
+      this.setState({
+        userData : (this.state.userData || []).concat(response.data.response)
+      })
+      return response
+    })
+    .then(response=>{
+      console.log('heer', response)
+     return instance.get(`product/${response.data.response[0].id}/products`)
+    })
+    .then((response)=>{
+      console.log(response)
+      response.data.response.map((e,i)=>{
+         if(e.type ==='activity'){
+              this.setState({
+                activity : (this.state.activity || []).concat(e)
+              })
+        }
+        else if(e.type ==='product'){
+          this.setState({
+            product : (this.state.product || []).concat(e)
+          })
+        }
+      })
+      
+
+      })
+      .then(()=>{
+        console.log(this.state)
+      })
+    
 }
 
   componentWillUnmount() {
@@ -54,39 +89,13 @@ static contextType = AuthContext
 
 
   render() {
+    console.log('popsy',this.props)
+
     return (<>
 
  
 
-{/* <!-- Navbar --> */}
-{/* <div className="">
- <div className="">
-  <a className="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onClick={this.myFunction}><i className="fa fa-bars"></i></a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i className="fa fa-home w3-margin-right"></i>Logo</a>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="News"><i className="fa fa-globe"></i></a>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Account Settings"><i className="fa fa-user"></i></a>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Messages"><i className="fa fa-envelope"></i></a>
-  <div className="w3-dropdown-hover w3-hide-small">
-    <button className="w3-button w3-padding-large" title="Notifications"><i className="fa fa-bell"></i><span className="w3-badge w3-right w3-small w3-green">3</span></button>     
-    <div className="w3-dropdown-content w3-card-4 w3-bar-block" style={{"width" : "300px"}}>
-      <a href="#" className="w3-bar-item w3-button">One new friend request</a>
-      <a href="#" className="w3-bar-item w3-button">John Doe posted on your wall</a>
-      <a href="#" className="w3-bar-item w3-button">Jane likes your post</a>
-    </div>
-  </div>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="My Account">
-    <img src={require("./dan.jpg")}  className="w3-circle" style={{"height" : "23px" , "width" : "23px", "transform" : "rotate(90deg)"}} alt="Avatar"></img>
-  </a>
- </div>
-</div> */}
 
-{/* <!-- Navbar on small screens --> */}
-{/* <div id="navDemo" className="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium w3-large">
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">Link 1</a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">Link 2</a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">Link 3</a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">My Profile</a>
-</div> */}
 
 {/* <!-- Page Container --> */}
 <div className="w3-container w3-content" style={{"maxWidth" : "1400px" ,  "marginTop" :" 80px"}}>    
@@ -98,7 +107,7 @@ static contextType = AuthContext
       <div className="w3-card w3-round w3-white">
         <div className="w3-container">
           {this.state.userData.map((e,i)=>{
-            return <h4 key={i} className="w3-center">{`${e.name}'s Profile`}</h4>
+            return <h4 key={i} className="w3-center">{`${e.name }'s Profile ${e.age }` }</h4>
 
           })}
          <p className="w3-center"><img src={require("./dan.jpg")} className="w3-circle" style={{"height" : "106px" , "width":"106px" , "transform":"rotate(90deg)"}} alt="Avatar"></img></p>

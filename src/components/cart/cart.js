@@ -24,18 +24,18 @@ componentDidMount(){
 render(){
 let total = 0
 return(
-<div class="col-25">
-<div class="container">
+<div className="col-25">
+<div className="container">
   <h4>Cart 
-    <span class="price" style={{"color" :"black"}}>
-      <i class="fa fa-shopping-cart"></i> 
+    <span className="price" style={{"color" :"black"}}>
+      <i className="fa fa-shopping-cart"></i> 
       <b>{this.state.orders.length}</b>
     </span>
   </h4>
   {
     this.state.orders.map((e,i)=>{
         total +=  parseInt(e.price)
-       return  <p key={i}><a>{e.name}</a> <span class="price">{`$${e.price}`}</span></p>
+       return  <p key={i}><a>{e.name}</a> <span className="price">{`$${e.price}`}</span></p>
 
 
       })
@@ -45,7 +45,7 @@ return(
   <p><a>Product 3</a> <span class="price">$8</span></p>
   <p><a>Product 4</a> <span class="price">$2</span></p> */}
   <hr></hr>
-  <p>Total <span class="price" style={{"color" :"black"}}><b>{`${total}`}</b></span></p>
+  <p>Total <span className="price" style={{"color" :"black"}}><b>{`${total}`}</b></span></p>
   <HashRouter><Link to='checkout'><button>Check Out</button></Link></HashRouter>
 </div>
 </div>

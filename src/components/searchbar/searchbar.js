@@ -33,7 +33,7 @@ searchby =()=>{
    const {searchby} =  this.state 
    console.log('query',this.state.query)
    if(this.state.query !== ''){
-   this.props.history.push(`search/${this.state.query}`)
+   this.props.history.push(`/search/${this.state.query}`)
    }
    console.log('helloworld')
 //    if(searchby === 'Profile'){
