@@ -16,6 +16,7 @@ class ProductListingsView extends React.Component{
 
     }
    
+
 goto=(e)=>{
     this.props.history.push(`/product/${e.name}`)
 }
@@ -31,7 +32,7 @@ goto=(e)=>{
 <div className='toprow'>
     <div className="rowone">
   {  productresults.map((ee,i)=>{
-    return    <Productlistingscard key={i} name={ee.name} onClick={()=>this.goto(ee)} />
+    return    <Productlistingscard key={i} name={ee.name} info={ee} onClick={()=>this.goto(ee)} />
 
       })  
   }
@@ -50,7 +51,7 @@ goto=(e)=>{
         <div className='toprow'>
             <div className="rowone">
           {  productresults.map((e,i)=>{
-            return    <Productlistingscard key={i} name={e.name}  />
+            return    <Productlistingscard key={i} info={e} name={e.name}  />
         
               })  
           }
@@ -70,7 +71,7 @@ goto=(e)=>{
         <div className='toprow'>
             <div className="rowone">
           {  this.props.searchresults.profile.map((e,i)=>{
-            return    <Productlistingscard key={i} name={e.name}  />
+            return    <Productlistingscard key={i} name={e.name} info={e}  />
         
               })  
           }

@@ -190,6 +190,7 @@ createProduct=(e, i, type)=>{
 }
 
 update=(e,i,type)=>{
+console.log(cartStorage())
 const { description, duration, location, name, price, image } = this.state[type][i]
 console.log("update")
 console.log(this.state[type][i])
