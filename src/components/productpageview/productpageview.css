@@ -1,43 +1,91 @@
-.productrow{
-width:650px;
-height:500px;
-margin-left: 300px;
-margin-top: 100px;
+
+.column-2{
+    width: calc(2.8*8.333%)
+
 }
+
+.column-2 .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: rgb(238, 230, 230);
+    color: black;
+    text-align: center;
+    padding: 5px 0;
+  
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+  
+    margin-left: -200px;
+  
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+.column-2:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+
 
 .featuredproductsrow{
 display: flex;
 flex-wrap: nowrap;
 overflow-x: auto;
 overflow-y: hidden;
-margin-left:10%;
+margin-left:21%;
 height: 200px;
 width: 75%;
-margin-top: 70px;
+margin-top: 50px;
 margin-bottom: 200px;
 /* background-color: blue; */
-justify-content: space-around;
+/* justify-content: space-around; */
 
 
 }
 
-.productimg{
-    width:200px;
-    height:200px;
+.feedback{
+  margin-top: 20px;
 }
 
-.column-2{
-    width: calc(2*8.333%)
 
+.gotoseller{
+    margin-left: 290px;
+    margin-top: 50px;
 }
 
-.productdescription{
-  margin-left: 20%;
-  margin-top:5%
-}
 
 .modal{
 
     width: 500px;
     height:500px;
 }
+
+
+.productimg{
+    width:200px;
+    height:200px;
+}
+
+
+.productdescription{
+  margin-left: 20%;
+  margin-top:5%
+}
+
+
+.productrow{
+    width:650px;
+    height:500px;
+    margin-left: 300px;
+    margin-top: 50px;
+    }
+
+
+.seller{
+  margin-left: 21%;
+  margin-top:180px;
+}
+
+
