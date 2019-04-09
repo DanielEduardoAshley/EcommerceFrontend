@@ -16,8 +16,6 @@ class Navbar extends React.Component{
       <>
     <Link to='/howitworks' className="active">How It Works</Link>
     <Link to='/profileview'>My Profile</Link>
-    {/* <Link to='/search'>Search</Link> */}
-    <Link to='/product'>Product</Link>
     <Link to='/sellershop'>Dashboard</Link>
     <Link to='/checkout'>Checkout</Link>
     <Link to='/logout'>Logout</Link>
@@ -33,13 +31,9 @@ class Navbar extends React.Component{
     <HashRouter>
       <>
     <Link to='/howitworks' className="active">How It Works</Link>
-    {/* <Link to='/profileview'>Profile</Link> */}
-    {/* <Link to='/search'>Search</Link> */}
-    <Link to='/product'>Product</Link>
     <Link to='/checkout'>Checkout</Link>
     <Link to='/signin'>Login</Link>
     <Link to='/signup'>Register</Link>
-    <Link to='/splash'>Splash</Link>
     <Link to='/cart'>🛒</Link>
 
       </>

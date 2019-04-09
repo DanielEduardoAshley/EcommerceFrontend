@@ -14,16 +14,17 @@ state={
 
 componentDidMount(){
     console.log('cart', cartStorage.getLocalStorage())
-    this.setState({
-        orders : (this.state.orders || []).concat(cartStorage.getLocalStorage())
-
-    })
-
+    if(cartStorage.getLocalStorage()){
+        this.setState({
+            orders : (this.state.orders || []).concat(cartStorage.getLocalStorage())
+        })
+    }
 }
 
 render(){
 let total = 0
 return(
+    this.state.orders !== [] ?<>
 <div className="col-25">
 <div className="container">
   <h4>Cart 
@@ -40,15 +41,16 @@ return(
 
       })
   }
-  {/* <p><a>Product 1</a> <span class="price">$15</span></p>
-  <p><a>Product 2</a> <span class="price">$5</span></p>
-  <p><a>Product 3</a> <span class="price">$8</span></p>
-  <p><a>Product 4</a> <span class="price">$2</span></p> */}
+
   <hr></hr>
   <p>Total <span className="price" style={{"color" :"black"}}><b>{`${total}`}</b></span></p>
   <HashRouter><Link to='checkout'><button>Check Out</button></Link></HashRouter>
 </div>
+
+
 </div>
+// </>
+: <h4>Cart is Empty</h4>
 )
 }
 }

@@ -10,17 +10,19 @@ class Productlistingscard extends React.Component{
 
 
  addToCart=()=>{
-  console.log(this.props.info.id)
+  console.log(this.props.info)
   const id = this.props.info.id
+  console.log(this.props.info.type )
   if(this.props.info.type === 'profile'){
     instance.get(`product/${id}/products`)
       .then((response)=>{
-        console.log(response.data.response)
+        console.log('j',response.data.response)
         cartStorage.updateStorage(response.data.response)
       })
   }
   else{
-    cartStorage.updateStorage(this.props.info)
+    console.log('this',this.props.info )
+    cartStorage.updateStorage([this.props.info])
   }
  }
   

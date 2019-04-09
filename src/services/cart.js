@@ -5,7 +5,7 @@ class Storage{
  }
  
  updateStorage=(product)=>{
-   if(!localStorage){
+   if(!localStorage.getItem('cart')){
         const array = []
         localStorage.setItem('cart', JSON.stringify(array))
    }
@@ -16,6 +16,7 @@ class Storage{
         locArr.push(product[i])
     } 
    const updLoc = parsedLocal.concat(locArr)
+   console.log('cServ', updLoc)
    localStorage.setItem('cart', JSON.stringify(updLoc))
  }
 
@@ -25,10 +26,15 @@ getLocalStorage=()=>{
      return stored
 }
 
- createGuestId=()=>{
+createGuestId=()=>{
    const guest_id = uuidv1()
    return guest_id
  }
+
+rid=()=>{
+return localStorage.clear()
+}
+
 }
 
 
