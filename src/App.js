@@ -63,7 +63,7 @@ componentWillUnmount() {
   <Route path='/searchview/:id' exact component={ SearchView }/>
   <Route path='/howitworks' exact component={ HowItWorksPage }/>
   <Route path='/search/:search'   component={Searchbar}/>
-  <Route path='/product' exact component={ ProductPageView }/>
+  <Route path='/product/:id' exact component={ ProductPageView }/>
   <Route path='/signin' exact component={ Signin }/>
   <Route path='/logout' exact component={ Logout }/>
   <Route path='/signup' exact component={ Signup }/>

@@ -45,14 +45,16 @@ searchby =()=>{
 //     }
      if(searchby === 'Product' || searchby === 'Activity'){
         const type = searchby.toLowerCase()
+        console.log('query',this.state.query)
         instance.get(`product/searchproducts/${type}/query/${this.state.query}`)
             .then(response=>{
+                console.log('responsetype', response)
                     this.setState(
                         {[ type ] : response.data.response,
                           clicked : true
                     })
                 })
-            .then(()=>console.log(this.state)
+            .then(()=>console.log('activity',this.state)
                  )
     }else{
         instance.get(`users/searchuser/${this.state.query}`)
@@ -62,7 +64,7 @@ searchby =()=>{
                         searchby : 'Profile'
                     
                     })
-                    console.log(response)
+                    console.log('type',response)
     })
     }
    console.log('theseprops',this.props)

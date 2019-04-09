@@ -32,6 +32,7 @@ goto=(e)=>{
 <div className='toprow'>
     <div className="rowone">
   {  productresults.map((ee,i)=>{
+      console.log('solution', ee)
     return    <Productlistingscard key={i} name={ee.name} info={ee} onClick={()=>this.goto(ee)} />
 
       })  

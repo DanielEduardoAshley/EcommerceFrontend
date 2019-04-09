@@ -26,10 +26,11 @@ class Productlistingscard extends React.Component{
   
 
 render(){
-    return(
-            
-          
-        <HashRouter><><Link to={`/searchview/${this.props.info.id}` } replace ><img src={require('./dan.jpg')} alt="Avatar" className="w3-left w3-circle w3-margin-right avatar" style={{"width":"60px", "marginLeft": "50px", "marginTop": "15px"}} ></img></Link><div className="w3-container w3-card w3-white w3-round w3-margin-right w3-margin-left marginbottom " ><br></br>
+  console.log('info',this.props.info.type)
+    return(<>
+          {this.props.info.type === 'activity'? <HashRouter><><Link to={`/product/${this.props.info.id}` }  ><img src={require('./dan.jpg')} alt="Avatar" className="w3-left w3-circle w3-margin-right avatar" style={{"width":"60px", "marginLeft": "50px", "marginTop": "15px"}} ></img></Link></></HashRouter> : this.props.info.type === 'product'? <HashRouter><><Link to={`/product/${this.props.info.id}` }  ><img src={require('./dan.jpg')} alt="Avatar" className="w3-left w3-circle w3-margin-right avatar" style={{"width":"60px", "marginLeft": "50px", "marginTop": "15px"}} ></img></Link></></HashRouter> :
+        <HashRouter><><Link to={`/searchview/${this.props.info.id}` }  ><img src={require('./dan.jpg')} alt="Avatar" className="w3-left w3-circle w3-margin-right avatar" style={{"width":"60px", "marginLeft": "50px", "marginTop": "15px"}} ></img></Link></></HashRouter>}
+        <div className="w3-container w3-card w3-white w3-round w3-margin-right w3-margin-left marginbottom " ><br></br>
         <span className="w3-right w3-opacity">1 min</span>
         
         <div onClick={this.addToCart}>🛒</div>
@@ -49,7 +50,7 @@ render(){
       </div>
       </>
 
-      </HashRouter>
+      
       
             
 

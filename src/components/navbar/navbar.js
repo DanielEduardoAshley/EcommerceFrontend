@@ -21,7 +21,6 @@ class Navbar extends React.Component{
     <Link to='/sellershop'>Dashboard</Link>
     <Link to='/checkout'>Checkout</Link>
     <Link to='/logout'>Logout</Link>
-    <Link to='/splash'>Splash</Link>
     <Link to='/cart'>🛒</Link>
 
     </>

@@ -244,7 +244,6 @@ instance.delete(`product/${prodid}`)
     return (<>
 
 
-
 {/* <!-- Page Container --> */}
 <div className="w3-container w3-content" style={{"maxWidth" : "1400px" ,  "marginTop" :" 20px"}}>    
   {/* <!-- The Grid --> */}
