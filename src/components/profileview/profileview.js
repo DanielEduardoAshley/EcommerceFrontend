@@ -114,7 +114,7 @@ class ProfileView extends Component {
               }
 
           })
-          this.setState({ product : (this.state.product || []).concat(response.data.response)})
+          // this.setState({ product : (this.state.product || []).concat(response.data.response)})
         })
       }
  })
@@ -155,19 +155,35 @@ class ProfileView extends Component {
   product=()=>{
     const obj = {}
     obj.image = []
-     this.setState({
-       product : (this.state.product || []).concat(obj)
-     })
+    obj.description = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+    obj.location = 'Anywhere'
+    obj.price = 10000
+    obj.name = 'Create An Product'
+    obj.duration = '1 day'
+    this.setState({
+      product : (this.state.product || []).concat(obj)
+    })
   }
 
-handlechange=(e, i, type)=>{
-  const { activity } = this.state
-  activity[i][type] = e.target.value;
+handlechange=(e, i, type, detail)=>{
+  const { types } = this.state.type
+  [types][i][detail] = e.target.value;
   this.setState({
-  activity : activity,
+  [this.state[type]] : types,
   })
-   console.log(activity, e)
+  //  console.log(activity, e)
 }
+
+handleNamechange=(e, i, type,name)=>{
+  //  console.log(this.state.type)
+console.log('type', this.state[type][i][name])
+this.state[type][i][name] = e.target.value;
+  this.setState({
+  [this.state[type]] : [this.state[type]],
+  })
+  //  console.log(activity, e)
+}
+
 
 createProduct=(e, i, type)=>{
   const { description, duration, location, name, price, image } = this.state[type][i]
@@ -182,7 +198,7 @@ createProduct=(e, i, type)=>{
     const types = this.state[type]
     types[i].id = response.data.response.id
     this.setState({
-       [this.state.type] : types
+       [this.state[type]] : types
     },()=>{
       console.log(this.state[type])
     })
@@ -190,7 +206,6 @@ createProduct=(e, i, type)=>{
 }
 
 update=(e,i,type)=>{
-console.log(cartStorage())
 const { description, duration, location, name, price, image } = this.state[type][i]
 console.log("update")
 console.log(this.state[type][i])
@@ -392,7 +407,7 @@ instance.delete(`product/${prodid}`)
         return <div className="w3-container w3-card w3-white w3-round w3-margin" key={i}><br></br>
         {/* <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">16 min</span>
-        <ContentEditable className='actName' html={this.state.activity[i].name} onChange={e=>this.handlechange(e,i, 'name')}  /><br></br><button onClick={e=>this.delete(e,i, 'activity')}>➖ Delete Activity</button><button onClick={e=>this.update(e,i, 'activity')}>Edit Activity</button><button >Publish Activity</button> 
+        <ContentEditable className='actName' html={this.state.activity[i].name} onChange={e=>this.handleNamechange(e,i, 'activity', 'name')}  /><br></br><button onClick={e=>this.delete(e,i, 'activity')}>➖ Delete Activity</button><button onClick={e=>this.update(e,i, 'activity')}>Edit Activity</button><button >Publish Activity</button> 
         <hr className="w3-clear"></hr>
         {/* Button to Add Media */}
         <div className='contains'>
@@ -403,10 +418,10 @@ instance.delete(`product/${prodid}`)
         </div>
         {/* Button to Add Media */}
         <a className='editText' onClick={e=>this.createProduct(e, i, 'activity')}>🖊️</a>
-        <div>Price:$<input placeholder='10000' value={e.price} onChange={e=>this.handlechange(e,i,'price')}></input></div><br></br>
-        <div>Location:<input placeholder='Anywhere'contentEditable='true' value={e.location} onChange={e=>this.handlechange(e, i, 'location')}></input></div><br></br>
-       <div>Duration:<input placeholder='1day' contentEditable='true'  value={e.duration} onChange={e=>this.handlechange(e, i, 'duration')}></input></div>
-        <ContentEditable disabled={false} html={this.state.activity[i].description}  onChange={e=>this.handlechange(e, i, 'description')}/>
+        <div>Price:$<input placeholder='10000' value={e.price} onChange={e=>this.handlechange(e,i,'activity','price')}></input></div><br></br>
+        <div>Location:<input placeholder='Anywhere'contentEditable='true' value={e.location} onChange={e=>this.handlechange(e, i, 'activity','location')}></input></div><br></br>
+       <div>Duration:<input placeholder='1day' contentEditable='true'  value={e.duration} onChange={e=>this.handlechange(e, i, 'activity','duration')}></input></div>
+        <ContentEditable disabled={false} html={this.state.activity[i].description}  onChange={e=>this.handlechange(e, i, 'activity','description')}/>
         {
           (e.image || []).map((e,i)=>{ 
              return  <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
@@ -435,7 +450,7 @@ instance.delete(`product/${prodid}`)
         return <div className="w3-container w3-card w3-white w3-round w3-margin" key={i}><br></br>
         {/* <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">16 min</span>
-        <h4 suppressContentEditableWarning={true} contentEditable='true'>Create A Product</h4><br></br><button>➖ Delete Product</button><button>Edit Product</button><button>Publish Product</button> 
+        <ContentEditable className='actName' html={this.state.product[i].name} onChange={e=>this.handleNamechange(e,i,'product', 'name')}  /><br></br><button onClick={e=>this.delete(e,i, 'product')}>➖ Delete Activity</button><button onClick={e=>this.update(e,i, 'product')}>Edit Activity</button><button >Publish Activity</button> 
         <hr className="w3-clear"></hr>
         {/* Button to Add Media */}
         <div className='contains'>
@@ -445,16 +460,21 @@ instance.delete(`product/${prodid}`)
         </div><div className='label'></div><div className='minus'>➖</div>
         </div>
         {/* Button to Add Media */}
-        <a className='editText'>🖊️</a>
-        <div>Price:<a suppressContentEditableWarning={true} contentEditable='true'>$</a></div><br></br>
-       <div>Duration:<a suppressContentEditableWarning={true} contentEditable='true' onChange={e=>this.duration(e)}>1 day</a></div>
-        <p suppressContentEditableWarning={true} contentEditable='true'>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <a className='editText' onClick={e=>this.createProduct(e, i, 'product')}>🖊️</a>
+        <div>Price:$<input placeholder='10000' value={e.price} onChange={e=>this.handlechange(e,i,'product','price')}></input></div><br></br>
+        <div>Duration:<input placeholder='1day' contentEditable='true'  value={e.duration} onChange={e=>this.handlechange(e, i, 'product','duration')}></input></div>
+        <ContentEditable disabled={false} html={this.state.product[i].description}  onChange={e=>this.handlechange(e, i, 'product','description')}/>
         {
           (e.image || []).map((e,i)=>{ 
           return   <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
   
   
           })
+        }
+        {
+           (e.images || []).map((e,i)=>{ 
+            return  <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+        })
         }
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
