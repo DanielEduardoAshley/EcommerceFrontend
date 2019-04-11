@@ -367,13 +367,14 @@ instance.delete(`product/${prodid}`)
           </div>
         </div>
       </div>
-      
-      <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
+      {this.state.storymedia.map((e,i)=>{
+        return <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
         {/* <img src="/w3images/avatar2.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">1 min</span>
         <h4 suppressContentEditableWarning={true} contentEditable='true'name='name' value={name}>Create Your Story</h4><button onClick={this.activity}>⛸️ Add An Activity</button><button onClick={this.product}>🎁Add A Product</button> 
         <hr className="w3-clear"></hr>
-
+        {/* <ContentEditable className='actName' html={this.state.product[i].name} onChange={e=>this.handleNamechange(e,i,'storymedia', 'name')}  /><br></br><button onClick={e=>this.update(e,i, 'storymedia')}>Edit Story</button>  */}
+        <h4 suppressContentEditableWarning={true} contentEditable='true'name='name' value={name}>'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'</h4>
         {/* Button to Add Media */}
         <div className='contains'>
         <div className="upload-btn-wrapper">
@@ -382,16 +383,22 @@ instance.delete(`product/${prodid}`)
         </div><div className='label'></div><div className='minus'>➖</div>
         </div>
         {/* Button to Add Media */}
-       <a className='editText'>🖊️</a>
+       <a className='editText' onClick={e=>this.createProduct(e, i, 'product')}>🖊️</a>
        
-        <p suppressContentEditableWarning={true} contentEditable='true' onClick={this.description}>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+       {/* <ContentEditable disabled={false} html={this.state.storymedia[i].description}  onChange={e=>this.handlechange(e, i, 'product','description')}/> */}
           <div className="w3-row-padding" style={{"margin" :"0 -16px"}}>
             <div className="w3-half">
+      
             {this.state.storymedia.map((e,i)=>{
              return <img src={e} style={{"width" :"100%"}} alt="Northern Lights" className="w3-margin-bottom" key={i}></img>
             
             })
             }
+             {/* { */}
+          {/* //  (e.images || []).map((e,i)=>{  */}
+          {/* //   return  <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+          //   })
+          //   } */}
               </div>
             <div className="w3-half">
               <img src="/w3images/nature.jpg" style={{"width":"100%"}} alt="Nature" className="w3-margin-bottom"></img>
@@ -400,7 +407,8 @@ instance.delete(`product/${prodid}`)
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
       </div>
-      
+       })
+       }  
 
       {this.state.activity.map((e,i)=>{
         console.log('iam', e.image)
@@ -450,7 +458,7 @@ instance.delete(`product/${prodid}`)
         return <div className="w3-container w3-card w3-white w3-round w3-margin" key={i}><br></br>
         {/* <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">16 min</span>
-        <ContentEditable className='actName' html={this.state.product[i].name} onChange={e=>this.handleNamechange(e,i,'product', 'name')}  /><br></br><button onClick={e=>this.delete(e,i, 'product')}>➖ Delete Activity</button><button onClick={e=>this.update(e,i, 'product')}>Edit Activity</button><button >Publish Activity</button> 
+        <ContentEditable className='actName' html={this.state.product[i].name} onChange={e=>this.handleNamechange(e,i,'product', 'name')}  /><br></br><button onClick={e=>this.delete(e,i, 'product')}>➖ Delete Product</button><button onClick={e=>this.update(e,i, 'product')}>Edit Product</button><button >Publish Product</button> 
         <hr className="w3-clear"></hr>
         {/* Button to Add Media */}
         <div className='contains'>
@@ -485,7 +493,7 @@ instance.delete(`product/${prodid}`)
 
       
     {/* <!-- End Middle Column --> */}
-    </div>
+</div>
     
     {/* <!-- Right Column --> */}
     <div className="w3-col m2">

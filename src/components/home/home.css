@@ -1,0 +1,18 @@
+.homecontainer{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+.homerows{
+    width: calc(3*8.333);
+    margin-left: 70px;
+    margin-top: 20px;
+
+}
+
+.heading{
+    margin-left: 70px;
+    margin-top: 50px;
+}

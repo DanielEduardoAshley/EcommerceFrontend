@@ -37,3 +37,29 @@ justify-content: center;
     margin-left: 16%;
     font-size: 20px;
     }
+
+    .textfield{
+    display: flex;
+    width : 1110px;
+    margin-left: 50px;
+    justify-content: space-around;
+    }
+
+    .textrow{
+    width: 10%;
+    }
+    .formrow{
+    margin-left: 20px;
+    width: 600px;
+    }
+
+    .edituserrow{
+    margin-top: 10px;
+    margin-left: 2%;
+    cursor: pointer;
+    }
+
+    .historyButton{
+    margin-left: 467px;
+    margin-top:60px;
+    }

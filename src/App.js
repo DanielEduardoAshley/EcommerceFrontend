@@ -15,6 +15,8 @@ import Sellersshopview from './components/sellersshopview/sellersshopview'
 import SearchView from './components/searchview/searchview'
 import Searchbar from './components/searchbar/searchbar'
 import Cart from './components/cart/cart'
+import Home from './components/home/home'
+
 
 
 
@@ -71,6 +73,7 @@ componentWillUnmount() {
   <Route path='/sellershop' exact component={ Sellersshopview }/>
   <Route path='/' exact component={ SplashPage }/>
   <Route path='/cart' exact component={ Cart }/>
+  <Route path='/home' exact component={ Home }/>
 
   </Switch>
 
