@@ -1,8 +1,9 @@
 .homecontainer{
     display: flex;
     width: 100%;
-    flex-wrap: wrap;
-    margin-top: 50px;
+    /* flex-wrap: wrap; */
+    overflow-y: scroll;
+    margin-top: 10px;
 }
 
 .homerows{
@@ -15,4 +16,5 @@
 .heading{
     margin-left: 70px;
     margin-top: 50px;
+    color :#112757;
 }

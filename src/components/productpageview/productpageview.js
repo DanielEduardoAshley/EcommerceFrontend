@@ -5,6 +5,7 @@ import { Button } from 'reactstrap';
 import Productlistingscard from '../productlistingscard/productlistingscard'
 import Sidedashboard from '../sidedashboard/sidedashboard'
 import instance from '../../services/axios'
+import cartStorage from '../../services/cart'
 
 class ProductPageView extends React.Component {
     state = {
@@ -42,6 +43,12 @@ goToSeller=()=>{
   
 }
 
+addToCart=(e,elem)=>{
+       
+      cartStorage.updateStorage([elem])
+    
+   }
+
     render() {
         console.log(this.props)
         console.log(this.state)
@@ -52,11 +59,14 @@ goToSeller=()=>{
             <>
             
             <button className='gotoseller'onClick={this.goToSeller}>Go To Seller's Page</button> 
+
                 <div className="productrow">
                     {/* <Productlistingscard/> */}
                     {
                         this.state.productinfo.map((e, i) => {
-                            return (<><div className="w3-row-padding " style={{ "margin": "0 -16px" }} key={i}>
+                            return (<>            <div onClick={event=>this.addToCart(event,e)}>🛒</div>
+
+                            <div className="w3-row-padding " style={{ "margin": "0 -16px" }} key={i}>
                                 <div className="">
                                     <h4>{e.name}</h4> 
                                     <h1>{`$${e.price}`}</h1>
