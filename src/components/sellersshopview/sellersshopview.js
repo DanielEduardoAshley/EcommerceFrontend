@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import './sellersshopview.css'
+import './sellersshopview.css';
 import { Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+import instance from '../../services/axios';
+import AuthContext from '../../contexts/auth';
+import * as firebase from 'firebase';
+
 
 const styles = theme => ({
     container: {
@@ -25,44 +29,58 @@ const styles = theme => ({
     },
   });
   
-  const currencies = [
-    {
-      value: 'USD',
-      label: '$',
-    },
-    {
-      value: 'EUR',
-      label: '€',
-    },
-    {
-      value: 'BTC',
-      label: '฿',
-    },
-    {
-      value: 'JPY',
-      label: '¥',
-    },
-  ];
+ 
 
 
 class TextFields extends React.Component{
     state = {
-        name: 'Beautiful',
-        age: '',
-        multiline: '345 Wilbury Rd',
-        currency: 'EUR',
+        // name: 'Beautiful',
+        // email: '',
+        // address:
+        // age: '',
+        // multiline: '345 Wilbury Rd',
+        // currency: 'EUR',
+        userData: [],
       };
+      componentDidMount(){
+      this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        instance.post(`users/${user.uid}`)
+        .then((userData)=>{
+            console.log('this is the data',userData.data.response)
+            this.setState({userData : (this.state.userData || []).concat(userData.data.response)})
+        })
+      }
 
+    })
+      }
+
+      componentWillUnmount(){
+        this.unsubscribe()
+      }
       handleChange = name => event => {
-        this.setState({ [name]: event.target.value });
+        console.log(event.target.value)
+         this.state.userData[0][name] = event.target.value
+        this.setState({ [this.state.userData]: [this.state.userData] });
       };
     
+      update=()=>{
+        const {username,name , email, address, number, country, state, zip,cc,age,type,description, shopname, id} = this.state.userData[0]
+        console.log("update")
+        instance.put(`users/${id}`, {username, name , email, address, number, country, state, zip, cc,age,type,description, shopname, id})
+        .then(()=>{
+          console.log('success', this.state.userData[0])
+
+        })
+        console.log('props', this.props)
+    }
 
 render(){
+    
     const { classes } = this.props
     return(
             <>
-          
+          {this.state.userData[0] ?<>
      <div className="textfield">
      <div className="textrow">
      <div className="sellerproduct">
@@ -85,8 +103,9 @@ render(){
         <TextField
           id="standard-name"
           label="Name"
+          defaultValue={`${this.state.userData[0].name}` || ''}
           className={classes.textField}
-          value={this.state.name}
+          // value={this.state.userData[0].name}
           onChange={this.handleChange('name')}
           margin="normal"
         />
@@ -94,8 +113,10 @@ render(){
         <TextField
           id="standard-uncontrolled"
           label="Username"
-          defaultValue="Daniel"
+          defaultValue={this.state.userData[0].username}
           className={classes.textField}
+          onChange={this.handleChange('username')}
+
           margin="normal"
         />
 
@@ -111,8 +132,9 @@ render(){
         <TextField
           id="standard-read-only-input"
           label="Shop Name(optional)"
-          defaultValue="Macy's"
+          defaultValue={this.state.userData[0].shopname}
           className={classes.textField}
+          onChange={this.handleChange('shopname')}
           margin="normal"
         />
 
@@ -128,21 +150,22 @@ render(){
         <TextField
           id="standard-password-input"
           label="Credit Card"
+          defaultValue={this.state.userData[0].cc}
           className={classes.textField}
           type="password"
           autoComplete="current-password"
+          onChange={this.handleChange('cc')}
           margin="normal"
         />
 
         <TextField
           id="standard-read-only-input"
           label="Age"
-          defaultValue="26"
+          defaultValue={this.state.userData[0].age}
           className={classes.textField}
+          onChange={this.handleChange('age')}
           margin="normal"
-          InputProps={{
-            readOnly: true,
-          }}
+         
         />
 
         <TextField
@@ -158,8 +181,8 @@ render(){
           label="Address"
           multiline
           rowsMax="4"
-          value={this.state.multiline}
-          onChange={this.handleChange('multiline')}
+          defaultValue={this.state.userData[0].address}
+          onChange={this.handleChange('address')}
           className={classes.textField}
           margin="normal"
         />
@@ -186,8 +209,10 @@ render(){
         <TextField
           id="standard-read-only-input"
           label="Country"
+          defaultValue={this.state.userData[0].country}
           placeholder="Placeholder"
           className={classes.textField}
+          onChange={this.handleChange('country')}
           margin="normal"
         />
 
@@ -201,15 +226,12 @@ render(){
         /> */}
 
         <TextField
-          id="standard-number"
+           id="standard-read-only-input"
           label="Number"
-          value={this.state.age}
-          onChange={this.handleChange('age')}
-          type="number"
+          defaultValue={this.state.userData[0].number}
+          placeholder="Placeholder"
           className={classes.textField}
-          InputLabelProps={{
-            shrink: true,
-          }}
+          onChange={this.handleChange('number')}
           margin="normal"
         />
 
@@ -268,9 +290,11 @@ render(){
           id="standard-width"
           label="Description"
           style={{ margin: 8 }}
+          defaultValue={this.state.userData[0].description}
           placeholder="Placeholder"
         //   helperText="Full width!"
           fullWidth
+          onChange={this.handleChange('description')}
           margin="normal"
           InputLabelProps={{
             shrink: true,
@@ -285,12 +309,14 @@ render(){
           margin="normal"
         />
       </form>
-      <div className='edituserrow'>🖊️</div>
+      <div className='edituserrow' onClick={e=>this.update()}>🖊️</div>
 
       </div>
       </div>
       <button className="historyButton">Show Purchase History</button>
-
+      </>
+      : null
+        }
       
       </>
       
