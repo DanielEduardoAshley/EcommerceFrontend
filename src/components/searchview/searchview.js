@@ -5,6 +5,7 @@ import {Link, HashRouter, Router} from 'react-router-dom'
 import './searchview.css'
 import instance from '../../services/axios'
 import AuthContext from '../../contexts/auth'
+import cartStorage from '../../services/cart'
 
 
 class SearchView extends Component {
@@ -80,10 +81,11 @@ class SearchView extends Component {
   componentWillUnmount() {
   }
   
-  addToCart=()=>{
-    console.log('cart')
-  }
+  addToCart=(e,elem)=>{
+       
+    cartStorage.updateStorage([elem])
   
+ }
   
  
 
@@ -230,18 +232,35 @@ class SearchView extends Component {
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
       </div>
-      
-      <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
+      {this.state.activity.map((e,i)=>{
+       return (<div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
         <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
         <span className="w3-right w3-opacity">16 min</span>
-        <h4>Jane Doe</h4><Link to='/product' className='prodview'>🔎</Link><a onClick={this.addToCart}>🛒</a><br></br>
+        <h4>{e.name}</h4><Link to={`/product/${e.id}`} className='prodview'>🔎</Link><a onClick={event=>this.addToCart(event,e)}>🛒</a><br></br>
         <hr className="w3-clear"></hr>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
         
-      </div>  
+       </div>  )
+      })
+      }
 
+
+
+      {this.state.product.map((e,i)=>{
+       return (<div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
+        <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
+        <span className="w3-right w3-opacity">16 min</span>
+        <h4>{e.name}</h4><Link to={`/product/${e.id}`} className='prodview'>🔎</Link><a onClick={event=>this.addToCart(event,e)}>🛒</a><br></br>
+        <hr className="w3-clear"></hr>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
+        <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
+        
+       </div>  )
+      })
+      }
       {/* <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
         <img src="/w3images/avatar6.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
         <span className="w3-right w3-opacity">32 min</span>
