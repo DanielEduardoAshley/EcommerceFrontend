@@ -8,7 +8,7 @@ import './profileview.css'
 import instance from '../../services/axios'
 import AuthContext from '../../contexts/auth'
 import cartStorage from '../../services/cart';
-
+import ReactPlayer from 'react-player'
 
 
 class ProfileView extends Component {
@@ -166,10 +166,10 @@ class ProfileView extends Component {
   }
 
 handlechange=(e, i, type, detail)=>{
-  const { types } = this.state.type
-  [types][i][detail] = e.target.value;
+  // const { types } = this.state.type
+  this.state[type][i][detail] = e.target.value;
   this.setState({
-  [this.state[type]] : types,
+  [this.state[type]] : [this.state[type]],
   })
   //  console.log(activity, e)
 }
@@ -249,6 +249,7 @@ instance.delete(`product/${prodid}`)
 }
 
   render() {
+
     console.log('This is your state',this.state)
     console.log(this.state.activity[0])
     const story = 'story'
@@ -432,15 +433,39 @@ instance.delete(`product/${prodid}`)
         <ContentEditable disabled={false} html={this.state.activity[i].description}  onChange={e=>this.handlechange(e, i, 'activity','description')}/>
         {
           (e.image || []).map((e,i)=>{ 
-             return  <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
-            
+            const media =  e.substring(
+              e.lastIndexOf(".") + 1, 
+              e.indexOf("?")
+          );
+            console.log(media)
+            if(media === 'mp4' ){
+              return <ReactPlayer url={e} playing key={i} />
+            }
+            else{
+              console.log(e)
+
+              return <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+            }   
+              
             
              })
         }
         {
            (e.images || []).map((e,i)=>{ 
-            return  <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
-        })
+            const media =  e.substring(
+              e.lastIndexOf(".") + 1, 
+              e.indexOf("?")
+          );
+            console.log(media)
+            if(media === 'mp4' ){
+              return <ReactPlayer url={e} playing key={i} />
+            }
+            else{
+              console.log(e)
+
+              return <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+            }   
+          })
         }
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
@@ -474,15 +499,39 @@ instance.delete(`product/${prodid}`)
         <ContentEditable disabled={false} html={this.state.product[i].description}  onChange={e=>this.handlechange(e, i, 'product','description')}/>
         {
           (e.image || []).map((e,i)=>{ 
-          return   <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+            const media =  e.substring(
+              e.lastIndexOf(".") + 1, 
+              e.indexOf("?")
+          );
+            console.log(media)
+            if(media === 'mp4' ){
+              return <ReactPlayer url={e} playing key={i} />
+            }
+            else{
+              console.log(e)
+
+              return <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+            }   
   
   
           })
         }
         {
            (e.images || []).map((e,i)=>{ 
-            return  <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
-        })
+            const media =  e.substring(
+              e.lastIndexOf(".") + 1, 
+              e.indexOf("?")
+          );
+            console.log(media)
+            if(media === 'mp4' ){
+              return <ReactPlayer url={e} playing key={i} />
+            }
+            else{
+              console.log(e)
+
+              return <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+            }   
+           })
         }
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
@@ -491,7 +540,8 @@ instance.delete(`product/${prodid}`)
       })}
        
 
-      
+
+
     {/* <!-- End Middle Column --> */}
 </div>
     
