@@ -13,6 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import AddressForm from './address';
 import PaymentForm from './paymentform';
 import Review from './review';
+import cartStorage from '../../services/cart';
+import instance from '../../services/axios';
+import AuthContext from '../../contexts/auth';
 
 const styles = theme => ({
   appBar: {
@@ -52,11 +55,10 @@ const styles = theme => ({
 });
 
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
-
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return <AddressForm />;
+      return <AddressForm state={5}/>;
     case 1:
       return <PaymentForm />;
     case 2:
@@ -70,11 +72,51 @@ class Checkout extends React.Component {
   state = {
     activeStep: 0,
   };
-
+static contextType = AuthContext
   handleNext = () => {
     this.setState(state => ({
       activeStep: state.activeStep + 1,
-    }));
+    }),()=>{
+      if( this.state.activeStep === steps.length){
+        console.log('order placed', this.props)
+        instance.post(`users/${this.context.uid}`)
+        .then((response)=>{
+          const users_id= response.data.response[0].id
+          const receipt = cartStorage.createGuestId()
+          const buyerinfo = cartStorage.getCheckoutStorage()
+          const name = `${buyerinfo[0]} ${buyerinfo[1]}`
+          const paymentinfo = cartStorage.getPaymentStorage()
+          const last = paymentinfo[3].split('')
+          const last4 =last.slice(-4)
+          const cc = parseInt(last4.join(''))
+          const total = cartStorage.getLocalStorage()
+          console.log('thistotal',cc)
+          let totalamount = 0
+          total.map(e=>{
+            totalamount+= parseInt(e.price) || 0
+            console.log(e.price)
+          })
+          console.log('total', totalamount)
+          console.log(users_id, receipt, buyerinfo,name,paymentinfo,cc)
+          // users_id, receipt, totalamount, name,address,city,state,zip,country,cc
+          const address = buyerinfo[2]
+          const city = buyerinfo[4]
+          const state = buyerinfo[5]
+          const zip = parseInt(buyerinfo[6])
+          console.log("zip",typeof totalamount)
+          const country = buyerinfo[7]
+          const purchaseInfo =  {users_id, receipt,totalamount, name,address,city,state,zip,country,cc}
+
+          instance.post('purchase', {users_id, receipt,totalamount, name,address,city,state,zip,country,cc})
+         
+        })
+        console.log(this.context)
+      }
+    });
+   
+   console.log(this.props
+    )
+
   };
 
   handleBack = () => {

@@ -67,7 +67,7 @@ class Home extends Component {
   }
 
   addToCart=(e,elem)=>{
-      
+      if(elem){
     if(elem.type === 'profile'){
       instance.get(`product/${elem.id}/products`)
         .then((response)=>{
@@ -79,6 +79,8 @@ class Home extends Component {
       
       cartStorage.updateStorage([elem])
     }
+}
+
    }
     
 

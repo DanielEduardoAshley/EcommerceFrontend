@@ -4,8 +4,35 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import cartStorage from '../../services/cart'
 
-function AddressForm() {
+class AddressForm extends React.Component{
+state={
+  firstName : '',
+  lastName: '',
+  address1:'',
+  address2:'',
+  city: '',
+  state:'',
+  zip:'',
+  country:'',
+
+}
+ handleChange=(e,name)=>{
+this.setState({
+    [name] : e.target.value,
+},()=>{
+  console.log(this.state)
+})
+
+}
+
+componentWillUnmount(){
+  console.log(this.state)
+  cartStorage.updateCheckoutStorage(this.state)
+}
+
+render(){
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -20,6 +47,7 @@ function AddressForm() {
             label="First name"
             fullWidth
             autoComplete="fname"
+            onChange={e=>this.handleChange(e, "firstName" )}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -30,6 +58,8 @@ function AddressForm() {
             label="Last name"
             fullWidth
             autoComplete="lname"
+            onChange={e=>this.handleChange(e, "lastName")}
+
           />
         </Grid>
         <Grid item xs={12}>
@@ -40,6 +70,8 @@ function AddressForm() {
             label="Address line 1"
             fullWidth
             autoComplete="billing address-line1"
+            onChange={e=>this.handleChange(e, "address1")}
+
           />
         </Grid>
         <Grid item xs={12}>
@@ -49,6 +81,8 @@ function AddressForm() {
             label="Address line 2"
             fullWidth
             autoComplete="billing address-line2"
+            onChange={e=>this.handleChange(e, "address2")}
+
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -59,10 +93,12 @@ function AddressForm() {
             label="City"
             fullWidth
             autoComplete="billing address-level2"
+            onChange={e=>this.handleChange(e, "city")}
+
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField id="state" name="state" label="State/Province/Region" fullWidth />
+          <TextField id="state" name="state" label="State/Province/Region" fullWidth onChange={e=>this.handleChange(e, "state")}/>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -72,6 +108,8 @@ function AddressForm() {
             label="Zip / Postal code"
             fullWidth
             autoComplete="billing postal-code"
+            onChange={e=>this.handleChange(e, "zip")}
+
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -82,6 +120,8 @@ function AddressForm() {
             label="Country"
             fullWidth
             autoComplete="billing country"
+            onChange={e=>this.handleChange(e, "country")}
+
           />
         </Grid>
         <Grid item xs={12}>
@@ -94,5 +134,5 @@ function AddressForm() {
     </React.Fragment>
   );
 }
-
+}
 export default AddressForm;

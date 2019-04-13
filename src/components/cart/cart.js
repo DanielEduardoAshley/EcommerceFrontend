@@ -13,6 +13,7 @@ state={
 }
 
 componentDidMount(){
+    console.log(this.props)
     console.log('cart', cartStorage.getLocalStorage())
     if(cartStorage.getLocalStorage()){
         this.setState({
@@ -35,8 +36,12 @@ return(
   </h4>
   {
     this.state.orders.map((e,i)=>{
-        total +=  parseInt(e.price)
-       return  <p key={i}><a>{e.name}</a> <span className="price">{`$${e.price}`}</span></p>
+        if(e.price){
+            total+=parseInt(e.price)
+        }else{
+        total +=  0
+        }
+       return  <p key={i}><a>{e.name}</a> <span className="price">{`${e.price || 0}` }</span></p>
 
 
       })

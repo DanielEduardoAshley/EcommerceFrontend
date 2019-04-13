@@ -46,7 +46,7 @@ goToSeller=()=>{
 addToCart=(e,elem)=>{
        
       cartStorage.updateStorage([elem])
-    
+       
    }
 
     render() {

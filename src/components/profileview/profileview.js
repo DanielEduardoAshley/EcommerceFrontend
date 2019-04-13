@@ -451,6 +451,7 @@ instance.delete(`product/${prodid}`)
              })
         }
         {
+          
            (e.images || []).map((e,i)=>{ 
             const media =  e.substring(
               e.lastIndexOf(".") + 1, 
@@ -466,6 +467,7 @@ instance.delete(`product/${prodid}`)
               return <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
             }   
           })
+        
         }
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
@@ -516,7 +518,7 @@ instance.delete(`product/${prodid}`)
   
           })
         }
-        {
+        { 
            (e.images || []).map((e,i)=>{ 
             const media =  e.substring(
               e.lastIndexOf(".") + 1, 
@@ -532,6 +534,8 @@ instance.delete(`product/${prodid}`)
               return <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
             }   
            })
+           
+          
         }
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 

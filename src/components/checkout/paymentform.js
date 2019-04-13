@@ -4,8 +4,28 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import cartStorage from '../../services/cart'
 
-function PaymentForm() {
+class PaymentForm extends React.Component {
+  state={
+    cardName: '',
+    cardNumber:'',
+    expDate:'',
+    cvv:'',
+  }
+
+  handleChange=(e ,name)=>{
+    this.setState({
+      [name] : e.target.value
+    })
+  }
+
+  componentWillUnmount(){
+    cartStorage.updatePaymentStorage(this.state)
+    console.log(this.state)
+  }
+
+ render(){
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -13,13 +33,14 @@ function PaymentForm() {
       </Typography>
       <Grid container spacing={24}>
         <Grid item xs={12} md={6}>
-          <TextField required id="cardName" label="Name on card" fullWidth />
+          <TextField required id="cardName" label="Name on card" fullWidth onChange={e=>this.handleChange(e, 'cardName')}/>
+          
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField required id="cardNumber" label="Card number" fullWidth />
+          <TextField required id="cardNumber" label="Card number" fullWidth onChange={e=>this.handleChange(e, 'cardNumber')}/>
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField required id="expDate" label="Expiry date" fullWidth />
+          <TextField required id="expDate" label="Expiry date" fullWidth onChange={e=>this.handleChange(e, 'expDate')}/>
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
@@ -28,6 +49,7 @@ function PaymentForm() {
             label="CVV"
             helperText="Last three digits on signature strip"
             fullWidth
+            onChange={e=>this.handleChange(e, 'cvv')}
           />
         </Grid>
         <Grid item xs={12}>
@@ -39,6 +61,7 @@ function PaymentForm() {
       </Grid>
     </React.Fragment>
   );
+}
 }
 
 export default PaymentForm;

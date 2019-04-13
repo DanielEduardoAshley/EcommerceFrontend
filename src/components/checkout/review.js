@@ -9,12 +9,16 @@ import Grid from '@material-ui/core/Grid';
 import cartStorage from '../../services/cart'
 
 const products = cartStorage.getLocalStorage('cart')
-const addresses = ['1 Material-UI Drive', 'Reactville', 'Anytown', '99999', 'USA'];
+const addressess = cartStorage.getLocalStorage('checkout')
+const paymentss = cartStorage.getPaymentStorage('payment')
+const addresses = [addressess[2],addressess[4], addressess[5], addressess[6], addressess[7]];
+
+console.log('this',paymentss)
 const payments = [
   { name: 'Card type', detail: 'Visa' },
-  { name: 'Card holder', detail: 'Mr John Smith' },
-  { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
-  { name: 'Expiry date', detail: '04/2024' },
+  { name: 'Card holder', detail: `${paymentss[0]}` },
+  { name: 'Card number', detail: `${paymentss[3]}` },
+  { name: 'Expiry date', detail: `${paymentss[1]}`},
 ];
 
 const styles = theme => ({
@@ -31,6 +35,9 @@ const styles = theme => ({
 
 function Review(props) {
   const { classes } = props;
+  const state={
+    address: ''
+  }
   let total = 0
   return (
     <React.Fragment>
@@ -38,11 +45,16 @@ function Review(props) {
         Order summary
       </Typography>
       <List disablePadding>
-        {products.map(product => {
+        {products.map((product,i) => {
+          if(product.price){
           total += parseInt(product.price)
-         return <ListItem className={classes.listItem} key={product.name}>
+          }
+          else{
+          total +=0
+          }
+         return <ListItem className={classes.listItem} key={product.name} key={i}>
             <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{`$${product.price}`}</Typography>
+            <Typography variant="body2">{`$${product.price || 0}`}</Typography>
           </ListItem>
         })}
         <ListItem className={classes.listItem}>
@@ -57,8 +69,8 @@ function Review(props) {
           <Typography variant="h6" gutterBottom className={classes.title}>
             Shipping
           </Typography>
-          <Typography gutterBottom>John Smith</Typography>
-          <Typography gutterBottom>{addresses.join(', ')}</Typography>
+          <Typography gutterBottom></Typography>
+          <Typography gutterBottom></Typography>
         </Grid>
         <Grid item container direction="column" xs={12} sm={6}>
           <Typography variant="h6" gutterBottom className={classes.title}>

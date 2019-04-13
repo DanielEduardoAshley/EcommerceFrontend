@@ -84,7 +84,7 @@ class SearchView extends Component {
   addToCart=(e,elem)=>{
        
     cartStorage.updateStorage([elem])
-  
+       
  }
   
  

@@ -20,12 +20,52 @@ class Storage{
    localStorage.setItem('cart', JSON.stringify(updLoc))
  }
 
+
+ updateCheckoutStorage=(state)=>{
+   let locArr=[]
+   if(state.firstName ==='' || state.lastName ===''|| state.address1 ===''||state.city===''||state.state===''||state.zip===''||state.country===''){
+     alert('Some information is missing')
+   }else{
+     locArr=[state.firstName,state.lastName,state.address1,state.address2,state.city,state.state,state.zip,state.country ]
+
+   }
+ 
+  console.log('checkoutlocal', locArr)
+  localStorage.setItem('checkout', JSON.stringify(locArr))
+}
+
+
+updatePaymentStorage=(state)=>{
+ let locArr =[]
+
+if(state.cardName===''|| state.cardNumber===''|| state.expDate===''|| state.cvv===''){
+  alert('Some information is missing')
+}else{
+  locArr=[ state.cardName, state.expDate, state.cvv, state.cardNumber ]
+}
+  
+  console.log('paymentlocal', locArr)
+  localStorage.setItem('payment', JSON.stringify(locArr))
+
+}
+
 getLocalStorage=()=>{
      localStorage.getItem('cart')
      const stored = JSON.parse(localStorage.getItem('cart'))
      return stored
 }
 
+getCheckoutStorage=()=>{
+  localStorage.getItem('checkout')
+  const stored = JSON.parse(localStorage.getItem('checkout'))
+  return stored
+}
+
+getPaymentStorage=()=>{
+  localStorage.getItem('checkout')
+  const stored = JSON.parse(localStorage.getItem('payment'))
+  return stored
+}
 createGuestId=()=>{
    const guest_id = uuidv1()
    return guest_id
