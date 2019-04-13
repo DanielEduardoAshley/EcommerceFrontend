@@ -99,7 +99,7 @@ class Checkout extends React.Component {
         <AppBar position="absolute" color="default" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" color="inherit" noWrap>
-YOLO            </Typography>
+SHELF©️            </Typography>
           </Toolbar>
         </AppBar>
         <main className={classes.layout}>

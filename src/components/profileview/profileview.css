@@ -33,3 +33,12 @@
     top: 0;
     opacity: 0;
   }
+
+  .editText{
+    margin-left: 670px;
+    cursor: pointer;
+  }
+
+  .actName{
+    font-size: 25px;
+  }

@@ -1,54 +1,71 @@
 import React, { Component } from 'react';
+import ContentEditable from 'react-contenteditable'
+
 // import firebase from '../../firebase';
 import * as firebase from 'firebase';
 import {Link, HashRouter, Router} from 'react-router-dom'
 import './profileview.css'
 import instance from '../../services/axios'
 import AuthContext from '../../contexts/auth'
+import cartStorage from '../../services/cart';
+import ReactPlayer from 'react-player'
 
 
 class ProfileView extends Component {
 
   state={
-    media : [],
+    storymedia : [],
     user : null,
     token : null,
     userId : null,
     userData: [],
+    activity:[],
+    product:[],
+    created: 0,
+    
+   
   }
 
-static contextType = AuthContext
-
-  saveImage = (url) => {
+  saveImage = (url, type, i=null) => {
     const date = Date();
-    this.setState({
-      media : (this.state.media || []).concat(url)
+    if(type === 'story'){
+      this.setState({
+        storymedia : (this.state.storymedia || []).concat(url)
+      })
+    }
+    else if(type === 'activity'){
+      const {activity} = this.state
+      const images =  (activity[i].image || []).concat(url)
+      activity[i].image = images
+      this.setState({
+      activity : activity ,
+      })
+    }
+    else{
+      const {product} = this.state
+      const images =  (product[i].image || []).concat(url)
+      product[i].image = images
+      this.setState({
+      product : product,
     })
+
+  }
     // ImageService.saveImage(url, date);
   }
 
-  handleFileInput = async (e) => {
+  handleFileInput = async (e,type, i) => {
    
-
 
     const firstFile = e.target.files[0];
 
     const root = firebase.storage().ref()
     const newImage = root.child(firstFile.name);
 
-    // newImage.put(firstFile)
-    //   .then((snapshot) => {
-    //     return snapshot.ref.getDownloadURL()
-    //   })
-    //   .then((url) => {
-    //     console.log(url)
-    //     this.saveImage(url);
-    //   })
-
+   
     try {
       const snapshot = await newImage.put(firstFile);
       const url = await snapshot.ref.getDownloadURL();
-      this.saveImage(url);
+      this.saveImage(url,type, i);
     }
     catch(err) {
       console.log(err);
@@ -72,18 +89,36 @@ static contextType = AuthContext
         // ..... DO YOUR LOGGED IN LOGIC
         this.setState({  userId: user.uid }, () => {
           this.getFirebasetoken()
-
         })
-
 
         instance.post(`users/${user.uid}`)
         .then((userData)=>{
-            console.log('this is the data',userData.data.response[0])
+            console.log('this is the data',userData.data.response)
             this.setState({userData : userData.data.response})
+            return userData
         })
-      
+        .then((response)=>{
+          console.log('hhhey')
+          return instance.get(`product/${response.data.response[0].id}/products`)
+        })
+        .then((response)=>{
+          console.log(response)
+          const data = response.data.response
+          data.forEach(ele=>{
+              if(ele.type === 'activity'){
+                this.setState({activity : (this.state.activity || []).concat(ele) })
+              }
+              else if(ele.type === 'product'){
+                this.setState({product : (this.state.product || []).concat(ele) })
+
+              }
+
+          })
+          // this.setState({ product : (this.state.product || []).concat(response.data.response)})
+        })
       }
  })
+
 }
 
   componentWillUnmount() {
@@ -104,44 +139,129 @@ static contextType = AuthContext
     })
   }
 
+  activity=()=>{
+     const obj = {}
+     obj.image = []
+     obj.description = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+     obj.location = 'Anywhere'
+     obj.price = 10000
+     obj.name = 'Create An Activity'
+     obj.duration = '1 day'
+     this.setState({
+       activity : (this.state.activity || []).concat(obj)
+     })
+  }
+
+  product=()=>{
+    const obj = {}
+    obj.image = []
+    obj.description = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+    obj.location = 'Anywhere'
+    obj.price = 10000
+    obj.name = 'Create An Product'
+    obj.duration = '1 day'
+    this.setState({
+      product : (this.state.product || []).concat(obj)
+    })
+  }
+
+handlechange=(e, i, type, detail)=>{
+  // const { types } = this.state.type
+  this.state[type][i][detail] = e.target.value;
+  this.setState({
+  [this.state[type]] : [this.state[type]],
+  })
+  //  console.log(activity, e)
+}
+
+handleNamechange=(e, i, type,name)=>{
+  //  console.log(this.state.type)
+console.log('type', this.state[type][i][name])
+this.state[type][i][name] = e.target.value;
+  this.setState({
+  [this.state[type]] : [this.state[type]],
+  })
+  //  console.log(activity, e)
+}
+
+
+createProduct=(e, i, type)=>{
+  const { description, duration, location, name, price, image } = this.state[type][i]
+  const seller_id = this.state.userData[0].id
+  
+  const images = JSON.stringify(image)
+  
+  console.log('json', images)
+  instance.post('product', {seller_id,description, duration,location, type, name, price, images })
+  .then((response)=>{
+    console.log('success', this.state[type])
+    const types = this.state[type]
+    types[i].id = response.data.response.id
+    this.setState({
+       [this.state[type]] : types
+    },()=>{
+      console.log(this.state[type])
+    })
+  })
+}
+
+update=(e,i,type)=>{
+const { description, duration, location, name, price, image } = this.state[type][i]
+console.log("update")
+console.log(this.state[type][i])
+const images = JSON.stringify(image)
+const prodid = this.state[type][i].id
+instance.put(`product/${prodid}`, { description, duration,location, type, name, price, images })
+.then(()=>{
+  console.log('success')
+})
+
+}
+
+
+
+delete=(e, i, type)=>{
+
+  console.log('remaining',  )
+const prodid = this.state[type][i].id
+console.log('id', prodid)
+const newState = this.state[type]
+
+instance.delete(`product/${prodid}`)
+  .then(()=>{
+    console.log('success')
+    if(type === 'activity'){
+    this.setState({
+      activity : (newState.slice(0,i)).concat(newState.slice(i+1 )),
+    })
+  }
+  else if(type === 'product'){
+    this.setState({
+      product : (newState.slice(0,i)).concat(newState.slice(i+1 )),
+    })
+
+  }
+  })
+  .then(()=>{
+    console.log(this.state)
+  })
+  
+}
 
   render() {
+
+    console.log('This is your state',this.state)
+    console.log(this.state.activity[0])
+    const story = 'story'
+    const placeholder = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+    const product = 'product'
+    const activity = 'activity'
+    const { description, duration, price, location, name } = this.state.activity
     return (<>
 
- 
-
-{/* <!-- Navbar --> */}
-{/* <div className="">
- <div className="">
-  <a className="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onClick={this.myFunction}><i className="fa fa-bars"></i></a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i className="fa fa-home w3-margin-right"></i>Logo</a>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="News"><i className="fa fa-globe"></i></a>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Account Settings"><i className="fa fa-user"></i></a>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Messages"><i className="fa fa-envelope"></i></a>
-  <div className="w3-dropdown-hover w3-hide-small">
-    <button className="w3-button w3-padding-large" title="Notifications"><i className="fa fa-bell"></i><span className="w3-badge w3-right w3-small w3-green">3</span></button>     
-    <div className="w3-dropdown-content w3-card-4 w3-bar-block" style={{"width" : "300px"}}>
-      <a href="#" className="w3-bar-item w3-button">One new friend request</a>
-      <a href="#" className="w3-bar-item w3-button">John Doe posted on your wall</a>
-      <a href="#" className="w3-bar-item w3-button">Jane likes your post</a>
-    </div>
-  </div>
-  <a href="#" className="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="My Account">
-    <img src={require("./dan.jpg")}  className="w3-circle" style={{"height" : "23px" , "width" : "23px", "transform" : "rotate(90deg)"}} alt="Avatar"></img>
-  </a>
- </div>
-</div> */}
-
-{/* <!-- Navbar on small screens --> */}
-{/* <div id="navDemo" className="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium w3-large">
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">Link 1</a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">Link 2</a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">Link 3</a>
-  <a href="#" className="w3-bar-item w3-button w3-padding-large">My Profile</a>
-</div> */}
 
 {/* <!-- Page Container --> */}
-<div className="w3-container w3-content" style={{"maxWidth" : "1400px" ,  "marginTop" :" 80px"}}>    
+<div className="w3-container w3-content" style={{"maxWidth" : "1400px" ,  "marginTop" :" 20px"}}>    
   {/* <!-- The Grid --> */}
   <div className="w3-row">
     {/* <!-- Left Column --> */}
@@ -248,30 +368,38 @@ static contextType = AuthContext
           </div>
         </div>
       </div>
-      
-      <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
-        <img src="/w3images/avatar2.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
+      {this.state.storymedia.map((e,i)=>{
+        return <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
+        {/* <img src="/w3images/avatar2.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">1 min</span>
-        <h4>John Doe</h4><br></br>
+        <h4 suppressContentEditableWarning={true} contentEditable='true'name='name' value={name}>Create Your Story</h4><button onClick={this.activity}>⛸️ Add An Activity</button><button onClick={this.product}>🎁Add A Product</button> 
         <hr className="w3-clear"></hr>
-
+        {/* <ContentEditable className='actName' html={this.state.product[i].name} onChange={e=>this.handleNamechange(e,i,'storymedia', 'name')}  /><br></br><button onClick={e=>this.update(e,i, 'storymedia')}>Edit Story</button>  */}
+        <h4 suppressContentEditableWarning={true} contentEditable='true'name='name' value={name}>'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'</h4>
         {/* Button to Add Media */}
         <div className='contains'>
         <div className="upload-btn-wrapper">
         <button className="btn">➕</button>
-        <input type="file" name="myfile" onChange={this.handleFileInput} onClick={this.getFirebasetoken} />
+        <input type="file" name="myfile" onChange={e=>this.handleFileInput(e,story)} onClick={this.getFirebasetoken} />
         </div><div className='label'></div><div className='minus'>➖</div>
         </div>
         {/* Button to Add Media */}
-
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+       <a className='editText' onClick={e=>this.createProduct(e, i, 'product')}>🖊️</a>
+       
+       {/* <ContentEditable disabled={false} html={this.state.storymedia[i].description}  onChange={e=>this.handlechange(e, i, 'product','description')}/> */}
           <div className="w3-row-padding" style={{"margin" :"0 -16px"}}>
             <div className="w3-half">
-            {this.state.media.map((e,i)=>{
+      
+            {this.state.storymedia.map((e,i)=>{
              return <img src={e} style={{"width" :"100%"}} alt="Northern Lights" className="w3-margin-bottom" key={i}></img>
             
             })
             }
+             {/* { */}
+          {/* //  (e.images || []).map((e,i)=>{  */}
+          {/* //   return  <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+          //   })
+          //   } */}
               </div>
             <div className="w3-half">
               <img src="/w3images/nature.jpg" style={{"width":"100%"}} alt="Nature" className="w3-margin-bottom"></img>
@@ -280,33 +408,142 @@ static contextType = AuthContext
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
       </div>
-      
-      <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
-        <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
+       })
+       }  
+
+      {this.state.activity.map((e,i)=>{
+        console.log('iam', e.image)
+        return <div className="w3-container w3-card w3-white w3-round w3-margin" key={i}><br></br>
+        {/* <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
         <span className="w3-right w3-opacity">16 min</span>
-        <h4>Jane Doe</h4><br></br>
+        <ContentEditable className='actName' html={this.state.activity[i].name} onChange={e=>this.handleNamechange(e,i, 'activity', 'name')}  /><br></br><button onClick={e=>this.delete(e,i, 'activity')}>➖ Delete Activity</button><button onClick={e=>this.update(e,i, 'activity')}>Edit Activity</button><button >Publish Activity</button> 
         <hr className="w3-clear"></hr>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        {/* Button to Add Media */}
+        <div className='contains'>
+        <div className="upload-btn-wrapper">
+        <button className="btn">➕</button>
+        <input type="file" name="myfile" onChange={e=>this.handleFileInput(e,activity, i)} onClick={this.getFirebasetoken} />
+        </div><div className='label'></div><div className='minus'>➖</div>
+        </div>
+        {/* Button to Add Media */}
+        <a className='editText' onClick={e=>this.createProduct(e, i, 'activity')}>🖊️</a>
+        <div>Price:$<input placeholder='10000' value={e.price} onChange={e=>this.handlechange(e,i,'activity','price')}></input></div><br></br>
+        <div>Location:<input placeholder='Anywhere'contentEditable='true' value={e.location} onChange={e=>this.handlechange(e, i, 'activity','location')}></input></div><br></br>
+       <div>Duration:<input placeholder='1day' contentEditable='true'  value={e.duration} onChange={e=>this.handlechange(e, i, 'activity','duration')}></input></div>
+        <ContentEditable disabled={false} html={this.state.activity[i].description}  onChange={e=>this.handlechange(e, i, 'activity','description')}/>
+        {
+          (e.image || []).map((e,i)=>{ 
+            const media =  e.substring(
+              e.lastIndexOf(".") + 1, 
+              e.indexOf("?")
+          );
+            console.log(media)
+            if(media === 'mp4' ){
+              return <ReactPlayer url={e} playing key={i} />
+            }
+            else{
+              console.log(e)
+
+              return <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+            }   
+              
+            
+             })
+        }
+        {
+           (e.images || []).map((e,i)=>{ 
+            const media =  e.substring(
+              e.lastIndexOf(".") + 1, 
+              e.indexOf("?")
+          );
+            console.log(media)
+            if(media === 'mp4' ){
+              return <ReactPlayer url={e} playing key={i} />
+            }
+            else{
+              console.log(e)
+
+              return <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+            }   
+          })
+        }
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
-      </div>  
+      </div> 
 
-      {/* <div className="w3-container w3-card w3-white w3-round w3-margin"><br></br>
-        <img src="/w3images/avatar6.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img>
-        <span className="w3-right w3-opacity">32 min</span>
-        <h4>Angie Jane</h4><br></br>
+      })}
+
+      {/* {     this.state.activitymedia[0].map((e,i)=>{
+             return <img src={e} style={{"width" :"100%"}} alt="Northern Lights" className="w3-margin-bottom" key={i}></img>
+            
+            })
+            } */}
+
+      {this.state.product.map((e,i)=>{
+        return <div className="w3-container w3-card w3-white w3-round w3-margin" key={i}><br></br>
+        {/* <img src="/w3images/avatar5.png" alt="Avatar" className="w3-left w3-circle w3-margin-right" style={{"width":"60px"}}></img> */}
+        <span className="w3-right w3-opacity">16 min</span>
+        <ContentEditable className='actName' html={this.state.product[i].name} onChange={e=>this.handleNamechange(e,i,'product', 'name')}  /><br></br><button onClick={e=>this.delete(e,i, 'product')}>➖ Delete Product</button><button onClick={e=>this.update(e,i, 'product')}>Edit Product</button><button >Publish Product</button> 
         <hr className="w3-clear"></hr>
-        <p>Have you seen this?</p>
-        <img src="/w3images/nature.jpg" style={{"width":"100%"}} className="w3-margin-bottom"></img>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        {/* Button to Add Media */}
+        <div className='contains'>
+        <div className="upload-btn-wrapper">
+        <button className="btn">➕</button>
+        <input type="file" name="myfile" onChange={e=>this.handleFileInput(e,product, i)} onClick={this.getFirebasetoken} />
+        </div><div className='label'></div><div className='minus'>➖</div>
+        </div>
+        {/* Button to Add Media */}
+        <a className='editText' onClick={e=>this.createProduct(e, i, 'product')}>🖊️</a>
+        <div>Price:$<input placeholder='10000' value={e.price} onChange={e=>this.handlechange(e,i,'product','price')}></input></div><br></br>
+        <div>Duration:<input placeholder='1day' contentEditable='true'  value={e.duration} onChange={e=>this.handlechange(e, i, 'product','duration')}></input></div>
+        <ContentEditable disabled={false} html={this.state.product[i].description}  onChange={e=>this.handlechange(e, i, 'product','description')}/>
+        {
+          (e.image || []).map((e,i)=>{ 
+            const media =  e.substring(
+              e.lastIndexOf(".") + 1, 
+              e.indexOf("?")
+          );
+            console.log(media)
+            if(media === 'mp4' ){
+              return <ReactPlayer url={e} playing key={i} />
+            }
+            else{
+              console.log(e)
+
+              return <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+            }   
+  
+  
+          })
+        }
+        {
+           (e.images || []).map((e,i)=>{ 
+            const media =  e.substring(
+              e.lastIndexOf(".") + 1, 
+              e.indexOf("?")
+          );
+            console.log(media)
+            if(media === 'mp4' ){
+              return <ReactPlayer url={e} playing key={i} />
+            }
+            else{
+              console.log(e)
+
+              return <img src={e} style={{"width" :"100%"}}  className="w3-margin-bottom" key={i}></img> 
+            }   
+           })
+        }
         <button type="button" className="w3-button w3-theme-d1 w3-margin-bottom"><i className="fa fa-thumbs-up"></i>  Like</button> 
         <button type="button" className="w3-button w3-theme-d2 w3-margin-bottom"><i className="fa fa-comment"></i>  Comment</button> 
-      </div>  */}
+      </div> 
 
-      
-      
+      })}
+       
+
+
+
     {/* <!-- End Middle Column --> */}
-    </div>
+</div>
     
     {/* <!-- Right Column --> */}
     <div className="w3-col m2">
